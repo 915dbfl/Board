@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +17,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //LoadingActivity를 불러와주는 코드
+        Intent intent = new Intent(this, LoadingActivity.class);
+        startActivity(intent);
 
         ListView listView;
         ListViewAdapter adapter;
