@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".LoadingActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-        <!--타이틀바가 존재하지 않게 함.-->
+        <activity android:name=".LoginActivity"/>
     </application>
 
 </manifest>
