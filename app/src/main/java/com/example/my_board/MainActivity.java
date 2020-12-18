@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.content.Intent;
 
@@ -18,12 +19,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //LoadingActivity를 불러와주는 코드
-        Intent intent = new Intent(this, LoadingActivity.class);
-        startActivity(intent);
-
         ListView listView;
         ListViewAdapter adapter;
+        Button Button_main_write;
+
 
         //Adapter 생성
         adapter = new ListViewAdapter();
@@ -57,5 +56,16 @@ public class MainActivity extends AppCompatActivity {
                 // TODO : use item data.
             }
         }) ;
+
+        Button_main_write = (Button)findViewById(R.id.Button_main_write);
+
+        Button_main_write.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

@@ -1,6 +1,8 @@
 package com.example.my_board;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -12,11 +14,13 @@ public class LoadingActivity extends Activity {
         startLoading();
     }
 
+
     private void startLoading(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                startActivity(new Intent(LoadingActivity.this, LoginActivity.class));
                 finish();
             }
         }, 2000);
