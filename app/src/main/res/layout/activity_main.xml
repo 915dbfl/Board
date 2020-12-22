@@ -15,15 +15,6 @@
         android:layout_weight="9"
         tools:context=".MainActivity">
 
-        <!--    <TextView-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="50dp"-->
-        <!--        android:background="@color/colorBrightBlue"-->
-        <!--        android:text="Board"-->
-        <!--        android:textSize="27dp"-->
-        <!--        android:gravity="center_horizontal">-->
-        <!--    </TextView>-->
-
         <ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
@@ -33,18 +24,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:background="@color/colorBrightBlue"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/Button_main_write"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/btn_login_white"
-            android:text="write"
-            android:padding="10px"
-            android:textColor="#ffffff" />
+            android:layout_marginLeft="330px"
+            >
+            <Button
+                android:id="@+id/Button_main_write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="10px"
+                android:background="@drawable/btn_login_white"
+                android:text="write"
+                android:padding="10px"
+                android:textColor="#ffffff" />
+            <Button
+                android:layout_marginLeft="10px"
+                android:id="@+id/Button_main_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="10px"
+                android:background="@drawable/btn_login_white"
+                android:text="logout"
+                android:padding="10px"
+                android:textColor="#ffffff" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

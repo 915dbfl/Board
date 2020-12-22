@@ -52,7 +52,7 @@
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:hint="title"
-                android:id="@+id/TextInputEditText_id">
+                android:id="@+id/TextInputEditText_title">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
@@ -82,9 +82,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="330dp"
                 android:layout_height="50dp"
-                android:hint="password"
-
-                android:id="@+id/TextInputEditText_password">
+                android:hint="content"
+                android:id="@+id/TextInputEditText_content">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>

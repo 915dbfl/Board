@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 public class ListViewItem {
     private Drawable board_icon;
     private String board_title;
-    private String board_content;
 
     public Drawable getBoard_icon() {
         return board_icon;
@@ -22,15 +21,5 @@ public class ListViewItem {
     public void setBoard_title(String board_title) {
         this.board_title = board_title;
     }
-
-    public String getBoard_content() {
-        return board_content;
-    }
-
-    public void setBoard_content(String board_content) {
-        this.board_content = board_content;
-    }
-
-
 
 }

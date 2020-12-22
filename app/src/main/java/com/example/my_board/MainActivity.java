@@ -1,6 +1,8 @@
 package com.example.my_board;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArraySet;
 import androidx.core.content.ContextCompat;
 
 import android.graphics.drawable.Drawable;
@@ -12,6 +14,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.content.Intent;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -20,9 +31,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView;
-        ListViewAdapter adapter;
+        final ListViewAdapter adapter;
         Button Button_main_write;
 
+        final ArrayList<String> title_arr = new ArrayList<String> ();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("Content");
 
         //Adapter 생성
         adapter = new ListViewAdapter();
@@ -31,15 +45,37 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
 
-        // 첫 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
-                "practice Day 1", "September 27th practice Day 1!") ;
-        // 두 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
-                "Sunday", "OMG! Tomorrow is Monday!!") ;
-        // 세 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
-                "last week", "Tomorrow is the last week for 2020.9") ;
+        database.addValueEventListener(new ValueEventListener(){
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSanpshot : dataSnapshot.getChildren()){
+                    String key = postSanpshot.getKey();
+                    adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice), key);
+                    title_arr.add(key);
+                }
+                System.out.println("titlearr" + title_arr);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+//        System.out.println("gggg" + title_arr);
+//        for(String data : title_arr){
+//            System.out.println("the data is" + data);
+//            adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice), data);
+//        }
+//         첫 번째 아이템 추가.
+//        adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice),
+//                "practice Day 1") ;
+//        // 두 번째 아이템 추가.
+//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
+//                "Sunday", "OMG! Tomorrow is Monday!!") ;
+//        // 세 번째 아이템 추가.
+//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
+//                "last week", "Tomorrow is the last week for 2020.9") ;
 
 
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
@@ -50,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 ListViewItem item = (ListViewItem) parent.getItemAtPosition(position) ;
 
                 String titleStr = item.getBoard_title() ;
-                String contentStr = item.getBoard_content() ;
                 Drawable iconDrawable = item.getBoard_icon() ;
 
                 // TODO : use item data.
