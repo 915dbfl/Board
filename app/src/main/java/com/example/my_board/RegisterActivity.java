@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String uid = user.getUid();
-                            String eamil = user.getEmail();
+                            String email = user.getEmail();
 
                             //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
                             HashMap<Object, String> hashMap = new HashMap<>();

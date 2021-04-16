@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -30,53 +31,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView;
+        final ListView listView;
         final ListViewAdapter adapter;
         Button Button_main_write;
 
-        final ArrayList<String> title_arr = new ArrayList<String> ();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("Content");
 
         //Adapter 생성
         adapter = new ListViewAdapter();
+        final User user = (User)getApplication();
 
         //리스트뷰 참조 및 Adapter달기
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
 
-        database.addValueEventListener(new ValueEventListener(){
-
+        database.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSanpshot : dataSnapshot.getChildren()){
-                    String key = postSanpshot.getKey();
-                    adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice), key);
-                    title_arr.add(key);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter.clear();
+
+                for(DataSnapshot Snapshot : dataSnapshot.getChildren()){
+                    String title = Snapshot.child("title").getValue().toString();
+                    String content = Snapshot.child("content").getValue().toString();
+                    String uid = Snapshot.child("uid").getValue().toString();
+                    adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice), title, content, uid);
+
                 }
-                System.out.println("titlearr" + title_arr);
+                adapter.notifyDataSetChanged();
+                listView.setAdapter(adapter);
+
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("Failed to read value.", error.toException());
             }
         });
-//        System.out.println("gggg" + title_arr);
-//        for(String data : title_arr){
-//            System.out.println("the data is" + data);
-//            adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice), data);
-//        }
-//         첫 번째 아이템 추가.
-//        adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice),
-//                "practice Day 1") ;
-//        // 두 번째 아이템 추가.
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
-//                "Sunday", "OMG! Tomorrow is Monday!!") ;
-//        // 세 번째 아이템 추가.
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.icon_notice),
-//                "last week", "Tomorrow is the last week for 2020.9") ;
-
 
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +78,21 @@ public class MainActivity extends AppCompatActivity {
                 ListViewItem item = (ListViewItem) parent.getItemAtPosition(position) ;
 
                 String titleStr = item.getBoard_title() ;
-                Drawable iconDrawable = item.getBoard_icon() ;
+                String contentStr = item.getBoard_content();
+                if(item.getBoard_uid().equals(user.getUId())){
+                    Intent intent = new Intent(MainActivity.this, MyBoardActivity.class);
+                    intent.putExtra("title", titleStr);
+                    intent.putExtra("content", contentStr);
+                    intent.putExtra("board_id", user.getUId()+titleStr);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+                    intent.putExtra("title", titleStr);
+                    intent.putExtra("content", contentStr);
+                    intent.putExtra("board_id", user.getUId()+titleStr);
+                    startActivity(intent);
+                }
+
 
                 // TODO : use item data.
             }

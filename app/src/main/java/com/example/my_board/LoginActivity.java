@@ -41,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         Button_login = (Button) findViewById(R.id.Button_login);
         Button_join = (Button) findViewById(R.id.Button_register);
 
+        final User user = (User)getApplicationContext();
+
         Button_login.setOnClickListener(new Button.OnClickListener(){
 
             @Override
@@ -53,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            FirebaseUser cuser = firebaseAuth.getCurrentUser();
+                            user.setUId(cuser.getEmail());
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                         }

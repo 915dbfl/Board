@@ -20,16 +20,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class MyBoardActivity extends AppCompatActivity {
+public class BoardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.myboard);
+        setContentView(R.layout.board);
         final ListViewAdapter adapter = new ListViewAdapter();
         final ListView listView;
 
         final FirebaseDatabase[] database = {FirebaseDatabase.getInstance()};
-        DatabaseReference myRef = database[0].getReference("Content");
+        DatabaseReference myRef = database[0].getReference("Content/");
 
 
         final TextView board_title;
@@ -52,6 +52,7 @@ public class MyBoardActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
 
         Intent intent = getIntent();
+        final String board_id = intent.getStringExtra("board_id");
 
         final String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
@@ -65,7 +66,7 @@ public class MyBoardActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyBoardActivity.this, MainActivity.class);
+                Intent intent = new Intent(BoardActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -77,7 +78,7 @@ public class MyBoardActivity extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference removeContent = database.getReference("Content/" + title + '/');
                 removeContent.removeValue();
-                Intent intent = new Intent(MyBoardActivity.this, MainActivity.class);
+                Intent intent = new Intent(BoardActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -93,15 +94,15 @@ public class MyBoardActivity extends AppCompatActivity {
                     hashMap.put("comment", comment);
                     hashMap.put("uid", user.getUId());
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference reference = database.getReference("Content/" + title + "/");
+                    DatabaseReference reference = database.getReference("Content/" + board_id + "/");
                     reference.child("comment/" + comment + '/').setValue(hashMap);
 
                     //글 작성 완료 시 가입 화면을 빠져나감.
-                    Toast.makeText(MyBoardActivity.this, "댓글 작성 완료!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BoardActivity.this, "댓글 작성 완료!", Toast.LENGTH_SHORT).show();
                 }
 
                 else{
-                    Toast.makeText(MyBoardActivity.this, "댓글 작성 실패!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BoardActivity.this, "댓글 작성 실패!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -110,7 +111,11 @@ public class MyBoardActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference removeContent = database.getReference("Content/" + title + '/');
+                removeContent.removeValue();
+                Intent intent = new Intent(BoardActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -123,10 +128,10 @@ public class MyBoardActivity extends AppCompatActivity {
                 User user = (User)getApplication();
                // DataSnapshot commSanpshot = (DataSnapshot) dataSnapshot.child(title + "/comment").getChildren();
 
-                for(DataSnapshot commentSnapshot : dataSnapshot.child(title + "/comment").getChildren()){
-                    String commentContent = commentSnapshot.getValue().toString();
-                    String uid = user.getUId();
-                    adapter.addItem(ContextCompat.getDrawable(MyBoardActivity.this, R.drawable.icon_notice), commentContent, commentContent , uid);
+                for(DataSnapshot commentSnapshot : dataSnapshot.child(board_id + "/comment").getChildren()){
+                    String commentContent = commentSnapshot.child("comment/").getValue().toString();
+                    String uid = commentSnapshot.child("uid/").getValue().toString();
+                    adapter.addItem(ContextCompat.getDrawable(BoardActivity.this, R.drawable.icon_notice), commentContent, commentContent, uid);
 
 
 //                    if(title.equals(key)){

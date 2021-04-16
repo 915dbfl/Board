@@ -2,8 +2,6 @@ package com.example.my_board;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,25 +9,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BoardActivity extends AppCompatActivity {
+public class MyBoardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.board);
+        setContentView(R.layout.myboard);
         final ListViewAdapter adapter = new ListViewAdapter();
         final ListView listView;
 
@@ -57,10 +52,12 @@ public class BoardActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
 
         Intent intent = getIntent();
+        final String board_id = intent.getStringExtra("board_id");
 
         final String title = intent.getStringExtra("title");
-        String content = intent.getStringExtra("content");
+        final String content = intent.getStringExtra("content");
         final int[] commentCount = {0};
+
 
 
         board_title.setText(title);
@@ -70,7 +67,7 @@ public class BoardActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BoardActivity.this, MainActivity.class);
+                Intent intent = new Intent(MyBoardActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -80,9 +77,9 @@ public class BoardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference removeContent = database.getReference("Content/" + title + '/');
+                DatabaseReference removeContent = database.getReference("Content/" + board_id + '/');
                 removeContent.removeValue();
-                Intent intent = new Intent(BoardActivity.this, MainActivity.class);
+                Intent intent = new Intent(MyBoardActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -98,15 +95,15 @@ public class BoardActivity extends AppCompatActivity {
                     hashMap.put("comment", comment);
                     hashMap.put("uid", user.getUId());
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference reference = database.getReference("Content/" + title + "/");
+                    DatabaseReference reference = database.getReference("Content/" + board_id + "/");
                     reference.child("comment/" + comment + '/').setValue(hashMap);
 
                     //글 작성 완료 시 가입 화면을 빠져나감.
-                    Toast.makeText(BoardActivity.this, "댓글 작성 완료!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyBoardActivity.this, "댓글 작성 완료!", Toast.LENGTH_SHORT).show();
                 }
 
                 else{
-                    Toast.makeText(BoardActivity.this, "댓글 작성 실패!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyBoardActivity.this, "댓글 작성 실패!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -115,10 +112,10 @@ public class BoardActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference removeContent = database.getReference("Content/" + title + '/');
-                removeContent.removeValue();
-                Intent intent = new Intent(BoardActivity.this, MainActivity.class);
+                Intent intent = new Intent(MyBoardActivity.this, WriteActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("content", content);
+                intent.putExtra("board_id", board_id);
                 startActivity(intent);
             }
         });
@@ -132,20 +129,12 @@ public class BoardActivity extends AppCompatActivity {
                 User user = (User)getApplication();
                // DataSnapshot commSanpshot = (DataSnapshot) dataSnapshot.child(title + "/comment").getChildren();
 
-                for(DataSnapshot commentSnapshot : dataSnapshot.child(title + "/comment").getChildren()){
-                    String commentContent = commentSnapshot.getValue().toString();
-                    String uid = user.getUId();
-                    adapter.addItem(ContextCompat.getDrawable(BoardActivity.this, R.drawable.icon_notice), commentContent, commentContent , uid);
+                for(DataSnapshot commentSnapshot : dataSnapshot.child(board_id + "/comment").getChildren()){
+                    String commentContent = commentSnapshot.child("comment/").getValue().toString();
+                    String uid = commentSnapshot.child("uid/").getValue().toString();
+                    adapter.addItem(ContextCompat.getDrawable(MyBoardActivity.this, R.drawable.icon_notice), commentContent, commentContent, uid);
 
 
-//                    if(title.equals(key)){
-//                        int count = (int)commentSnapshot.child("comment/").getChildrenCount();
-//                        for(int i = 0; i < count; i++){
-//                            String commentContent = commentSnapshot.child("comment/" + i + "/").getKey();
-//                            System.out.println("commentContent: "+ commentContent);
-//                            adapter.addItem(ContextCompat.getDrawable(BoardActivity.this, R.drawable.icon_notice), commentContent, key);
-//                        }
-//                    }
                 }
                 adapter.notifyDataSetChanged();
                 listView.setAdapter(adapter);
