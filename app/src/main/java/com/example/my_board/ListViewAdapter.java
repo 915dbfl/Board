@@ -80,6 +80,7 @@ public class ListViewAdapter extends BaseAdapter {
         item.setBoard_icon(icon);
 
         listViewItemList.add(item);
+
     }
 }
 
