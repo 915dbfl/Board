@@ -100,27 +100,27 @@
             android:background="@drawable/btn_login_white"
             android:textColor="#ffffff" />
 
-        <Button
-            android:layout_marginTop="16dp"
-            android:id="@+id/Button_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:text="modify"
-            android:background="@drawable/btn_login_white"
-            android:textColor="#ffffff" />
+<!--        <Button-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:id="@+id/Button_modify"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:text="modify"-->
+<!--            android:background="@drawable/btn_login_white"-->
+<!--            android:textColor="#ffffff" />-->
 
-        <Button
-            android:layout_marginTop="16dp"
-            android:id="@+id/Button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:text="delete"
-            android:background="@drawable/btn_login_white"
-            android:textColor="#ffffff" />
+<!--        <Button-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:id="@+id/Button_delete"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:text="delete"-->
+<!--            android:background="@drawable/btn_login_white"-->
+<!--            android:textColor="#ffffff" />-->
     </LinearLayout>
 
     <LinearLayout
@@ -186,11 +186,11 @@
             android:layout_marginBottom="30dp"
             tools:context=".BoardActivity">
 
-            <ListView
+            <ExpandableListView
                 android:id="@+id/listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </ListView>
+            </ExpandableListView>
         </LinearLayout>
     </LinearLayout>
 

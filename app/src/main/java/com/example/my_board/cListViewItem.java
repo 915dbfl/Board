@@ -2,25 +2,10 @@ package com.example.my_board;
 
 import android.graphics.drawable.Drawable;
 
-public class ListViewItem {
+public class cListViewItem {
     private Drawable board_icon;
     private String board_title;
-    private String board_uid;
 
-    public ListViewItem(Drawable icon, String title, String id){
-        board_icon = icon;
-        board_title = title;
-        board_uid = id;
-    }
-    public String getBoard_cComment() {
-        return board_cComment;
-    }
-
-    public void setBoard_cComment(String board_cComment) {
-        this.board_cComment = board_cComment;
-    }
-
-    private String board_cComment;
 
     public String getBoard_content() {
         return board_content;
@@ -39,6 +24,8 @@ public class ListViewItem {
     public void setBoard_uid(String board_uid) {
         this.board_uid = board_uid;
     }
+
+    private String board_uid;
 
     public Drawable getBoard_icon() {
         return board_icon;

@@ -34,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
         final ListView listView;
         final ListViewAdapter adapter;
         Button Button_main_write;
+        Button Button_logout = (Button)findViewById(R.id.Button_main_logout);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("Content");
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("Content");
 
         //Adapter 생성
         adapter = new ListViewAdapter();
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 adapter.clear();
+                adapter.setIsboard(1);
 
                 for(DataSnapshot Snapshot : dataSnapshot.getChildren()){
                     String title = Snapshot.child("title").getValue().toString();
@@ -83,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, MyBoardActivity.class);
                     intent.putExtra("title", titleStr);
                     intent.putExtra("content", contentStr);
-                    intent.putExtra("board_id", user.getUId()+titleStr);
+                    intent.putExtra("board_id", item.getBoard_uid()+titleStr);
                     startActivity(intent);
                 }else{
                     Intent intent = new Intent(MainActivity.this, BoardActivity.class);
                     intent.putExtra("title", titleStr);
                     intent.putExtra("content", contentStr);
-                    intent.putExtra("board_id", user.getUId()+titleStr);
+                    intent.putExtra("board_id", item.getBoard_uid()+titleStr);
                     startActivity(intent);
                 }
 
@@ -105,6 +107,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button_logout.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

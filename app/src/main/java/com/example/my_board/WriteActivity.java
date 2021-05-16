@@ -79,7 +79,10 @@ public class WriteActivity extends AppCompatActivity {
                     String content = TextInputEditText_content.getText().toString().trim();
                     System.out.println(title + "," + content);
 
-                    if(title != "" && content != ""){
+                    if(title.isEmpty() || content.isEmpty()){
+                        Toast.makeText(WriteActivity.this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
                         //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
                         HashMap<Object, String> hashMap = new HashMap<>();
                         hashMap.put("uid", user.getUId());
@@ -96,9 +99,6 @@ public class WriteActivity extends AppCompatActivity {
                         Intent intent = new Intent(WriteActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else{
-                        Toast.makeText(WriteActivity.this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
