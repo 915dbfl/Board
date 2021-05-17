@@ -1,6 +1,7 @@
 package com.example.my_board;
 
 import android.graphics.drawable.Drawable;
+import android.view.View;
 
 public class ListViewItem {
     private Drawable board_icon;

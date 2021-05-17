@@ -42,6 +42,7 @@ public class MyBoardActivity extends AppCompatActivity {
         Button Button_delete;
         Button Button_done;
         Button Button_modify;
+        View body;
 
         TextView board_content;
         final TextView board_comment;
@@ -50,6 +51,7 @@ public class MyBoardActivity extends AppCompatActivity {
         Button_modify = (Button) findViewById(R.id.Button_modify);
         Button_delete = (Button) findViewById(R.id.Button_delete);
         Button_done = (Button) findViewById(R.id.Button_done);
+
 
         board_title = (TextView)findViewById(R.id.board_title);
         board_content = (TextView)findViewById(R.id.board_content);
@@ -133,6 +135,7 @@ public class MyBoardActivity extends AppCompatActivity {
                 adapter = new ExListViewAdapter(null, null);
                 adapter.setUId(user.getUId());
                 adapter.setBoard_title(board_id);
+
                 int index = 0;
 
                 ArrayList<ListViewItem> parent = new ArrayList<ListViewItem>();
@@ -198,7 +201,6 @@ public class MyBoardActivity extends AppCompatActivity {
                 listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                     @Override
                     public void onGroupExpand(int groupPosition) {
-
                     }
                 });
 

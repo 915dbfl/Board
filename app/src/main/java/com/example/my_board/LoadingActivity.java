@@ -24,8 +24,10 @@ public class LoadingActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null){
+                FirebaseUser cuser = auth.getCurrentUser();
+                if (cuser != null){
+                    User user = (User)getApplicationContext();
+                    user.setUId(cuser.getEmail());
                     startActivity(new Intent(LoadingActivity.this, MainActivity.class));
                     finish();
                 } else{
