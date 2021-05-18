@@ -1,6 +1,7 @@
 package com.example.my_board;
 
 import android.widget.Button;
+import android.widget.ExpandableListView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -10,5 +11,4 @@ public class Holder {
     Button deleteBtn;
     String boardTitle;
     int position;
-
 }

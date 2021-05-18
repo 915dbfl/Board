@@ -13,8 +13,10 @@ import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.view.menu.MenuView;
@@ -35,19 +37,18 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
     private ImageView board_icon;
     private TextView board_title;
     private TextView board_uid;
-    private TextInputEditText cComment;
-    private Button content_delete;
-    private Button comments;
     private String uid;
     private String title;
+    public ExpandableListView listView;
 
     private ArrayList<ListViewItem> mParentList;
     private HashMap<ListViewItem, ArrayList<ListViewItem>> mChildHashMap;
 
     //ListViewAdapter의 생성자
-    public ExListViewAdapter(ArrayList<ListViewItem> parentList, HashMap<ListViewItem, ArrayList<ListViewItem>> childHashMap){
+    public ExListViewAdapter(ArrayList<ListViewItem> parentList, HashMap<ListViewItem, ArrayList<ListViewItem>> childHashMap, ExpandableListView listView){
         this.mParentList = parentList;
         this.mChildHashMap = childHashMap;
+        this.listView = listView;
     }
 
 
@@ -111,26 +112,26 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, final ViewGroup parent) {
         final ListViewItem listViewItem = mParentList.get(groupPosition);
-        Holder holder = null;
+        Holder holder;
+        holder = null;
         System.out.println("가져온 부모 listView는 " +  listViewItem.getBoard_title());
         if(convertView == null){
             Context context = parent.getContext();
+            holder = new Holder();
+            holder.boardTitle = listViewItem.getBoard_title();
             if(listViewItem.getBoard_uid().equals(uid)){
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.listview_mcitem,parent,false);
-                holder = new Holder();
-                holder.boardTitle = listViewItem.getBoard_title();
-                holder.editBtn = (Button) convertView.findViewById(R.id.cComent);
-                holder.editText = (TextInputEditText) convertView.findViewById(R.id.TextInputEditText_cComment);
                 holder.deleteBtn = (Button)convertView.findViewById(R.id.content_delete);
-                convertView.setTag(holder);
-
             }else{
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.listview_citem,parent,false);
             }
+            holder.editBtn = (Button) convertView.findViewById(R.id.cComent);
+            holder.editText = (TextInputEditText) convertView.findViewById(R.id.TextInputEditText_cComment);
+            convertView.setTag(holder);
         }else{
             holder = (Holder) convertView.getTag();
         }
@@ -145,14 +146,15 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                System.out.println("textedit이 존재하는 list의 제목은 " + mParentList.get(finalHolder.position).getBoard_title());
-                Log.d("TAG", "새로운 값이 업데이트되었다.");
-                mParentList.get(finalHolder.position).setBoard_cComment(s.toString());
+//                System.out.println("textedit이 존재하는 list의 제목은 " + mParentList.get(finalHolder.position).getBoard_title());
+//                Log.d("TAG", "새로운 값이 업데이트되었다.");
+//                mParentList.get(finalHolder.position).setBoard_cComment(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                Log.d("TAG", "새로운 값이 업데이트되었다.");
+                mParentList.get(finalHolder.position).setBoard_cComment(s.toString());
             }
         });
         if(listViewItem.getBoard_uid().equals(uid)) {
@@ -185,19 +187,6 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
                 }
             }
         });
-//        LinearLayout layout = (LinearLayout)convertView.findViewById(R.id.body);
-//        layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                public void onGroupExpand(int groupPosition) {
-//                    int groupCount = getGroupCount();
-//                    for (int i = 0; i < groupCount; i++) {
-//                        if (!(i == groupPosition)) mListView.collapseGroup(i);
-//                    }
-//                }
-//
-//            }
-//        });
 
 
         //화면에 표시될 View(Layout이 infate된)으로부터 위젯에 대한 참조 획득
@@ -217,16 +206,14 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final ListViewItem listViewItem = getChild(groupPosition, childPosition);
-        final Holder holder;
+        System.out.println(listViewItem.getBoard_title() + " 제가 존재하는 곳은 " + getGroup(groupPosition).getBoard_title() );
         if(convertView == null){
             Context context = parent.getContext();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listview_item, parent, false);
-            holder = new Holder();
         }
         else{
         }
-
         //화면에 표시될 View(Layout이 infate된)으로부터 위젯에 대한 참조 획득
         board_icon = (ImageView) convertView.findViewById(R.id.board_img);
         board_title = (TextView) convertView.findViewById(R.id.board_title);

@@ -103,7 +103,7 @@ public class BoardActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listView.setAdapter((BaseExpandableListAdapter)null);
                 User user = (User)getApplication();
-                adapter = new ExListViewAdapter(null, null);
+                adapter = new ExListViewAdapter(null, null, listView);
                 adapter.setUId(user.getUId());
                 adapter.setBoard_title(board_id);
                 int index = 0;
