@@ -109,27 +109,27 @@ public class BoardActivity extends AppCompatActivity {
                 int index = 0;
 
                 ArrayList<ListViewItem> parent = new ArrayList<ListViewItem>();
-                ArrayList<ListViewItem> child= new ArrayList<ListViewItem>();
+                HashMap<Integer, ArrayList<ListViewItem>> citemList = new HashMap<Integer, ArrayList<ListViewItem>>();
                 //parent list와 child list를 연결할 hashmap 변수 선언
                 HashMap<ListViewItem, ArrayList<ListViewItem>> childlist = new HashMap<ListViewItem, ArrayList<ListViewItem>>();
                 for(DataSnapshot parentSnapshot : dataSnapshot.child(board_id + "/comment").getChildren()){
-                    if(index != 0){
-                        index++;
-                    }
+                    index++;
+                    ArrayList<ListViewItem> child= new ArrayList<ListViewItem>();
                     String commentContent = parentSnapshot.child("comment/").getValue().toString();
-                    System.out.println("댓글은 " + commentContent);
                     String uid = parentSnapshot.child("uid/").getValue().toString();
                     ListViewItem pitem = new ListViewItem(ContextCompat.getDrawable(BoardActivity.this, R.drawable.icon_notice), commentContent, uid);
                     parent.add(pitem);
                     for(DataSnapshot childSnapshot : parentSnapshot.child("/ccomment").getChildren()){
                         String ccommentContent = childSnapshot.child("comment/").getValue().toString();
-                        System.out.println("대댓글은 " + ccommentContent);
+                        System.out.println("댓글은 " + commentContent + ", 대댓글은 " + ccommentContent);
                         String cuid = childSnapshot.child("uid/").getValue().toString();
                         ListViewItem citem = new ListViewItem(ContextCompat.getDrawable(BoardActivity.this, R.drawable.icon_notice), ccommentContent, cuid);
                         child.add(citem);
                     }
+                    citemList.put(index-1, child);
                     if(!child.isEmpty()){
-                        childlist.put(parent.get(index), child);
+                        childlist.put(parent.get(index-1), citemList.get(index-1));
+                        System.out.println(parent.get(index-1).getBoard_title() + "에 맵핑 완료!!!");
                     }
                 }
                 adapter.setmParentList(parent);

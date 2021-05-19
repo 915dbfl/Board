@@ -138,7 +138,6 @@ public class MyBoardActivity extends AppCompatActivity {
                 int index = 0;
 
                 ArrayList<ListViewItem> parent = new ArrayList<ListViewItem>();
-//                ArrayList<ListViewItem> child= new ArrayList<ListViewItem>();
                 HashMap<Integer, ArrayList<ListViewItem>> citemList = new HashMap<Integer, ArrayList<ListViewItem>>();
                 //parent list와 child list를 연결할 hashmap 변수 선언
                 HashMap<ListViewItem, ArrayList<ListViewItem>> childlist = new HashMap<ListViewItem, ArrayList<ListViewItem>>();

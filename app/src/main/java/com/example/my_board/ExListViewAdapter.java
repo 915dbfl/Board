@@ -114,6 +114,7 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, final ViewGroup parent) {
         final ListViewItem listViewItem = mParentList.get(groupPosition);
+        System.out.println("로그인한 회원의 id는 " + uid + ", 게시판을 작성한 id는 " + listViewItem.getBoard_uid());
         Holder holder;
         holder = null;
         System.out.println("가져온 부모 listView는 " +  listViewItem.getBoard_title());
@@ -121,19 +122,22 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
             Context context = parent.getContext();
             holder = new Holder();
             holder.boardTitle = listViewItem.getBoard_title();
-            if(listViewItem.getBoard_uid().equals(uid)){
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.listview_mcitem,parent,false);
-                holder.deleteBtn = (Button)convertView.findViewById(R.id.content_delete);
-            }else{
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.listview_citem,parent,false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.listview_mcitem, parent, false);
+            holder.deleteBtn = (Button) convertView.findViewById(R.id.content_delete);
+            if(!listViewItem.getBoard_uid().equals(uid)) {
+                holder.deleteBtn.setVisibility(View.INVISIBLE);
             }
             holder.editBtn = (Button) convertView.findViewById(R.id.cComent);
             holder.editText = (TextInputEditText) convertView.findViewById(R.id.TextInputEditText_cComment);
             convertView.setTag(holder);
         }else{
             holder = (Holder) convertView.getTag();
+            if(!listViewItem.getBoard_uid().equals(uid)) {
+                holder.deleteBtn.setVisibility(View.INVISIBLE);
+            }else{
+                holder.deleteBtn.setVisibility(View.VISIBLE);
+            }
         }
         final Holder finalHolder = holder;
         holder.position = groupPosition;
