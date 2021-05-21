@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
                     String title = Snapshot.child("title").getValue().toString();
                     String content = Snapshot.child("content").getValue().toString();
                     String uid = Snapshot.child("uid").getValue().toString();
-                    adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice), title, content, uid);
+                    String countLike = Snapshot.child("like").getValue().toString();
+                    adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice), title, content, uid, countLike);
 
                 }
                 adapter.notifyDataSetChanged();
@@ -86,12 +87,15 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("title", titleStr);
                     intent.putExtra("content", contentStr);
                     intent.putExtra("board_id", item.getBoard_uid()+titleStr);
+                    intent.putExtra("countLike", item.getCountLike());
                     startActivity(intent);
                 }else{
                     Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+                    intent.putExtra("boardUid", item.getBoard_uid());
                     intent.putExtra("title", titleStr);
                     intent.putExtra("content", contentStr);
                     intent.putExtra("board_id", item.getBoard_uid()+titleStr);
+                    intent.putExtra("countLike", item.getCountLike());
                     startActivity(intent);
                 }
 

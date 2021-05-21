@@ -130,9 +130,10 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     //아이템 데이터 추가를 위한 함수.
-    public void addItem(Drawable icon, String title, String content, String uid){
+    public void addItem(Drawable icon, String title, String content, String uid, String countLike){
         ListViewItem item = new ListViewItem(icon, title, uid);
         item.setBoard_content(content);
+        item.setCountLike(countLike);
         listViewItemList.add(item);
 
     }

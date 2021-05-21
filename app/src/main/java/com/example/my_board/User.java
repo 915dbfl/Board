@@ -2,11 +2,15 @@ package com.example.my_board;
 
 import android.app.Application;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class User extends Application {
     private String UId;
     private String Upwd;
     private String Email;
     @Override
+
     public void onCreate() { super.onCreate(); }
 
 

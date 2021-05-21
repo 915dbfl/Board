@@ -7,12 +7,17 @@ public class ListViewItem {
     private Drawable board_icon;
     private String board_title;
     private String board_uid;
+    private int countLike;
 
     public ListViewItem(Drawable icon, String title, String id){
         board_icon = icon;
         board_title = title;
         board_uid = id;
     }
+    public String getCountLike() { return Integer.toString(countLike); }
+
+    public void setCountLike(String countLike) { this.countLike = Integer.parseInt(countLike); }
+
     public String getBoard_cComment() {
         return board_cComment;
     }

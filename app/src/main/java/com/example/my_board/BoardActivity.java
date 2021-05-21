@@ -1,16 +1,19 @@
 package com.example.my_board;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -31,9 +34,9 @@ public class BoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
         final ExpandableListView listView = (ExpandableListView) findViewById(R.id.listview);
-
-        final FirebaseDatabase[] database = {FirebaseDatabase.getInstance()};
-        DatabaseReference myRef = database[0].getReference("Content/");
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference Ref = database.getReference("Content/");
+        final User user = (User)getApplication();
 
         final TextView board_title;
         Button Button_list;
@@ -43,22 +46,46 @@ public class BoardActivity extends AppCompatActivity {
 
         TextView board_content;
         final TextView board_comment;
+        final TextView countLike;
+        final ToggleButton likeImage;
 
         Button_list = (Button) findViewById(R.id.Button_list);
-        Button_modify = (Button) findViewById(R.id.Button_modify);
-        Button_delete = (Button) findViewById(R.id.Button_delete);
         Button_done = (Button) findViewById(R.id.Button_done);
 
         board_title = (TextView)findViewById(R.id.board_title);
         board_content = (TextView)findViewById(R.id.board_content);
         board_comment = (TextView)findViewById(R.id.TextInputEditText_comment);
+        likeImage = (ToggleButton)findViewById(R.id.likeImage);
+        countLike = (TextView)findViewById(R.id.countLike);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final String board_id = intent.getStringExtra("board_id");
-
         final String title = intent.getStringExtra("title");
+        final String boardUid = intent.getStringExtra("boardUid");
         String content = intent.getStringExtra("content");
-        final int[] commentCount = {0};
+        countLike.setText(intent.getStringExtra("countLike"));
+
+        final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        final DatabaseReference myRef = database.getReference("User/" + user.getUId() + "/likeList");
+        likeImage.setTag("1");
+        if(Integer.parseInt(likeImage.getTag().toString()) == 1){
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(Integer.parseInt(likeImage.getTag().toString()) == 1){
+                        if(dataSnapshot.child(title).getValue() != null){
+                            likeImage.setTag("0");
+                            likeImage.setChecked(true);
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("Failed to read value.", error.toException());
+                }
+            });
+        }
 
 
         board_title.setText(title);
@@ -97,12 +124,49 @@ public class BoardActivity extends AppCompatActivity {
             }
         });
 
+        likeImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            int boardLike = Integer.parseInt(intent.getStringExtra("countLike"));
+            int like = boardLike;
+            SharedPreferences preferencesR = getPreferences(MODE_PRIVATE);
+            boolean likePrefR = preferencesR.getBoolean(title + "like", false);
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println("likeRefR" + likePrefR);
+                if(isChecked)
+                {
+                    if(Integer.parseInt(likeImage.getTag().toString()) == 1) {
+                        like++;
+                        DatabaseReference likeRef = Ref.child(boardUid + title + "/like/");
+                        likeRef.setValue(like);
+                        Toast.makeText(BoardActivity.this, "좋아요를 눌렀습니다.", Toast.LENGTH_SHORT).show();
+                        countLike.setText(Integer.toString(like));
+                        myRef.child(title+"/").setValue(title);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean(title + "like", true); // value to store
+                        editor.commit();
+                    }
+                }
+                else
+                {
+                    like--;
+                    likeImage.setChecked(false);
+                    DatabaseReference likeRef = Ref.child(boardUid+ title + "/like/");
+                    likeRef.setValue(like);
+                    Toast.makeText(BoardActivity.this, "좋아요를 취소했습니다.", Toast.LENGTH_SHORT).show();
+                    countLike.setText(Integer.toString(like));
+                    myRef.child(title+"/").removeValue();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(title + "like", false); // value to store
+                    editor.commit();
+                }
+            }
+        });
 
-        myRef.addValueEventListener(new ValueEventListener() {
+
+        Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listView.setAdapter((BaseExpandableListAdapter)null);
-                User user = (User)getApplication();
                 adapter = new ExListViewAdapter(null, null, listView);
                 adapter.setUId(user.getUId());
                 adapter.setBoard_title(board_id);
@@ -141,39 +205,6 @@ public class BoardActivity extends AppCompatActivity {
                 for(int i = 0; i < groupCount; i++){
                     listView.expandGroup(i);
                 }
-
-
-//                listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//                    @Override
-//                    public void onGroupExpand(int groupPosition) {
-//                    }
-//                });
-//                listView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-//                    @Override
-//                    public void onGroupCollapse(int groupPosition) {
-//                    }
-//                });
-//                listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//                    @Override
-//                    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//                        Toast.makeText(BoardActivity.this, "child_Clicked", Toast.LENGTH_LONG).show();
-//                        return false;
-//                    }
-//                });
-//
-//                listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-//                    @Override
-//                    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-//                        Toast.makeText(BoardActivity.this, "group_Clicked", Toast.LENGTH_LONG).show();
-//                        return false;
-//                    }
-//                });
-//                listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//                    @Override
-//                    public void onGroupExpand(int groupPosition) {
-//                        Toast.makeText(BoardActivity.this, "group open", Toast.LENGTH_LONG).show();
-//                    }
-//                });
 
             }
 

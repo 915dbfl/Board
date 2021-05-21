@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else{
                     final String email = TextView_register_id.getText().toString();
-                    String pw = TextView_register_pw.getText().toString();
+                    final String pw = TextView_register_pw.getText().toString();
 
                     System.out.println(email + "," + pw);
 
@@ -73,11 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
                                 HashMap<Object, String> hashMap = new HashMap<>();
-                                hashMap.put("uid", uid);
                                 hashMap.put("email", email);
+                                hashMap.put("pw", pw);
+                                hashMap.put("uid", uid);
 
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference reference = database.getReference("Users");
+                                DatabaseReference reference = database.getReference("User");
                                 reference.child(uid).setValue(hashMap);
 
                                 //가입이 이루어졌을 시 가입 화면을 빠져나감.

@@ -122,13 +122,40 @@
             android:background="@drawable/btn_login_white"
             android:textColor="#ffffff" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="70dp"
+        android:layout_marginTop="10dp">
+        <ToggleButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/likestate"
+            android:textOff=""
+            android:textOn=""
+            android:id="@+id/likeImage">
+        </ToggleButton>
+        <TextView
+            android:id="@+id/countLike"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="0"
+            android:layout_marginLeft="10dp"
+            ></TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="likes">
+        </TextView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout="@+id/login_image"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         >
         <TextView
             android:layout_width="wrap_content"

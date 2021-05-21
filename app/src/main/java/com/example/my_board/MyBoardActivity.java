@@ -2,21 +2,32 @@ package com.example.my_board;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,15 +45,18 @@ public class MyBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myboard);
         final ExpandableListView listView = (ExpandableListView) findViewById(R.id.listview);
-        final FirebaseDatabase[] database = {FirebaseDatabase.getInstance()};
-        DatabaseReference myRef = database[0].getReference("Content");
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference Ref = database.getReference("Content");
+        final User user = (User)getApplication();
+
 
         final TextView board_title;
         Button Button_list;
         Button Button_delete;
         Button Button_done;
         Button Button_modify;
-        View body;
+        final ToggleButton likeImage;
+        final TextView countLike;
 
         TextView board_content;
         final TextView board_comment;
@@ -51,24 +65,47 @@ public class MyBoardActivity extends AppCompatActivity {
         Button_modify = (Button) findViewById(R.id.Button_modify);
         Button_delete = (Button) findViewById(R.id.Button_delete);
         Button_done = (Button) findViewById(R.id.Button_done);
-
+        likeImage = (ToggleButton)findViewById(R.id.likeImage);
+        countLike = (TextView)findViewById(R.id.countLike);
 
         board_title = (TextView)findViewById(R.id.board_title);
         board_content = (TextView)findViewById(R.id.board_content);
         board_comment = (TextView)findViewById(R.id.TextInputEditText_comment);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final String board_id = intent.getStringExtra("board_id");
-
         final String title = intent.getStringExtra("title");
         final String content = intent.getStringExtra("content");
+        countLike.setText(intent.getStringExtra("countLike"));
+
+        final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        final DatabaseReference myRef = database.getReference("User/" + user.getUId() + "/likeList");
+        likeImage.setTag("1");
+        if(Integer.parseInt(likeImage.getTag().toString()) == 1){
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(Integer.parseInt(likeImage.getTag().toString()) == 1){
+                        if(dataSnapshot.child(title).getValue() != null){
+                            likeImage.setTag("0");
+                            likeImage.setChecked(true);
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("Failed to read value.", error.toException());
+                }
+            });
+        }
+
+
 
         board_title.setText(title);
         board_content.setText(content);
 
-
         Button_list.setOnClickListener(new Button.OnClickListener(){
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyBoardActivity.this, MainActivity.class);
@@ -80,8 +117,9 @@ public class MyBoardActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                User user = (User)getApplication();
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference removeContent = database.getReference("Content/" + board_id + '/');
+                DatabaseReference removeContent = database.getReference("Content/" + user.getUId() + title + '/');
                 removeContent.removeValue();
                 Intent intent = new Intent(MyBoardActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -121,17 +159,53 @@ public class MyBoardActivity extends AppCompatActivity {
                 intent.putExtra("content", content);
                 intent.putExtra("board_id", board_id);
                 startActivity(intent);
+
             }
         });
 
+        likeImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            int boardLike = Integer.parseInt(intent.getStringExtra("countLike"));
+            int like = boardLike;
+            SharedPreferences preferencesR = getPreferences(MODE_PRIVATE);
+            boolean likePrefR = preferencesR.getBoolean(title + "like", false);
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println("likeRefR" + likePrefR);
+                if(isChecked)
+                {
+                    if(Integer.parseInt(likeImage.getTag().toString()) == 1){
+                        like++;
+                        DatabaseReference likeRef = Ref.child(user.getUId() + title + "/like/");
+                        likeRef.setValue(like);
+                        Toast.makeText(MyBoardActivity.this, "좋아요를 눌렀습니다.", Toast.LENGTH_SHORT).show();
+                        countLike.setText(Integer.toString(like));
+                        myRef.child(title + "/").setValue(title);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean(title + "like", true); // value to store
+                        editor.commit();
+                    }
+                }
+                else
+                {
+                    like--;
+                    likeImage.setChecked(false);
+                    DatabaseReference likeRef = Ref.child(user.getUId() + title + "/like/");
+                    likeRef.setValue(like);
+                    Toast.makeText(MyBoardActivity.this, "좋아요를 취소했습니다.", Toast.LENGTH_SHORT).show();
+                    countLike.setText(Integer.toString(like));
+                    myRef.child(title+ "/").removeValue();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(title + "like", false); // value to store
+                    editor.commit();
+                }
+            }
+        });
 
-
-        myRef.addValueEventListener(new ValueEventListener() {
+        Ref.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listView.setAdapter((BaseExpandableListAdapter)null);
-                User user = (User)getApplication();
                 adapter = new ExListViewAdapter(null, null, listView);
                 adapter.setUId(user.getUId());
                 adapter.setBoard_title(board_id);
@@ -170,38 +244,6 @@ public class MyBoardActivity extends AppCompatActivity {
                 for(int i = 0; i < groupCount; i++){
                     listView.expandGroup(i);
                 }
-
-
-//                listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//                    @Override
-//                    public void onGroupExpand(int groupPosition) {
-//                    }
-//                });
-//                listView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-//                    @Override
-//                    public void onGroupCollapse(int groupPosition) {
-//                    }
-//                });
-//                listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//                    @Override
-//                    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//                        Toast.makeText(MyBoardActivity.this, "child_Clicked", Toast.LENGTH_LONG).show();
-//                        return false;
-//                    }
-//                });
-//
-//                listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-//                    @Override
-//                    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-//                       listView.expandGroup(groupPosition);
-//                       return true;
-//                    }
-//                });
-//                listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//                    @Override
-//                    public void onGroupExpand(int groupPosition) {
-//                    }
-//                });
 
             }
 
