@@ -39,7 +39,9 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
     private TextView board_uid;
     private String uid;
     private String title;
-    public ExpandableListView listView;
+    private ExpandableListView listView;
+    private LinearLayout likePart;
+
 
     private ArrayList<ListViewItem> mParentList;
     private HashMap<ListViewItem, ArrayList<ListViewItem>> mChildHashMap;
@@ -150,9 +152,6 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                System.out.println("textedit이 존재하는 list의 제목은 " + mParentList.get(finalHolder.position).getBoard_title());
-//                Log.d("TAG", "새로운 값이 업데이트되었다.");
-//                mParentList.get(finalHolder.position).setBoard_cComment(s.toString());
             }
 
             @Override
@@ -205,23 +204,23 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
 
         return convertView;
     }
-    ///////////////////삭제 시, 사라지지 않음, 대댓글 작성 오류 및 뜨지 않음
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final ListViewItem listViewItem = getChild(groupPosition, childPosition);
-        System.out.println(listViewItem.getBoard_title() + " 제가 존재하는 곳은 " + getGroup(groupPosition).getBoard_title() );
         if(convertView == null){
             Context context = parent.getContext();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listview_item, parent, false);
         }
-        else{
-        }
+
         //화면에 표시될 View(Layout이 infate된)으로부터 위젯에 대한 참조 획득
         board_icon = (ImageView) convertView.findViewById(R.id.board_img);
         board_title = (TextView) convertView.findViewById(R.id.board_title);
         board_uid = (TextView)convertView.findViewById(R.id.board_uid);
+        likePart = (LinearLayout)convertView.findViewById(R.id.likePart);
+        likePart.setVisibility(View.INVISIBLE);
+
 
         //아이템 내 각 위젯에 데이터 반영
         board_icon.setImageDrawable(listViewItem.getBoard_icon());

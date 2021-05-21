@@ -76,6 +76,7 @@ public class MyBoardActivity extends AppCompatActivity {
         final String board_id = intent.getStringExtra("board_id");
         final String title = intent.getStringExtra("title");
         final String content = intent.getStringExtra("content");
+        final String like = intent.getStringExtra("countLike");
         countLike.setText(intent.getStringExtra("countLike"));
 
         final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
@@ -159,6 +160,8 @@ public class MyBoardActivity extends AppCompatActivity {
                 intent.putExtra("title", title);
                 intent.putExtra("content", content);
                 intent.putExtra("board_id", board_id);
+                intent.putExtra("countLike", countLike.getText());
+                intent.putExtra("checkLike", likeImage.isChecked());
                 startActivity(intent);
 
             }

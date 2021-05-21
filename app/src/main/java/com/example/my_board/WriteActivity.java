@@ -2,6 +2,8 @@ package com.example.my_board;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,8 +39,8 @@ public class WriteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String btitle = intent.getStringExtra("title");
         final String bcontent = intent.getStringExtra("content");
-        System.out.println(btitle + bcontent);
-        final String board_id = intent.getStringExtra("board_id");
+        final String like = intent.getStringExtra("countLike");
+        final boolean checkLike = intent.getBooleanExtra("checkLike", false);
 
         final User user = (User)getApplication();
         if(btitle != null && bcontent != null){
@@ -56,14 +58,21 @@ public class WriteActivity extends AppCompatActivity {
                         hashMap.put("uid", user.getUId());
                         hashMap.put("title", title);
                         hashMap.put("content", content);
-                        hashMap.put("like", 0);
 
                         final FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference contentRef = database.getReference("Content/");
                         if(btitle.equals(title)){
+                            DatabaseReference myRef = database.getReference("User/" + user.getUId() + "/likeList");
+                            hashMap.put("like", like);
+                            Log.d("수정 시 like 값" , like);
                             contentRef.child(user.getUId() + title).updateChildren(hashMap);
-                        }
-                        else{
+                            if(checkLike == true && !bcontent.equals(content)){
+                                int deLike = Integer.parseInt(like) - 1;
+                                contentRef.child(user.getUId() + title + "/like/").setValue(deLike);
+                                myRef.child(user.getUId() + btitle).removeValue();
+                            }
+                        }else{
+                            hashMap.put("like", 0);
                             contentRef.child(user.getUId() + title).setValue(hashMap);
                         }
                         contentRef.addValueEventListener(new ValueEventListener() {
@@ -99,6 +108,7 @@ public class WriteActivity extends AppCompatActivity {
                         });
                         if(!btitle.equals(title)){
                             contentRef.child(user.getUId() + btitle+ "/").removeValue();
+
                         }
 
                         //가입이 이루어졌을 시 가입 화면을 빠져나감.
@@ -132,7 +142,6 @@ public class WriteActivity extends AppCompatActivity {
                         hashMap.put("title", title);
                         hashMap.put("content", content);
                         hashMap.put("like", 0);
-
 
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference reference = database.getReference("Content");
