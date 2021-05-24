@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     String title = Snapshot.child("title").getValue().toString();
                     String content = Snapshot.child("content").getValue().toString();
                     String uid = Snapshot.child("uid").getValue().toString();
-                    String countLike = Snapshot.child("like").getValue().toString();
+                    String countLike = Integer.toString((int)Snapshot.child("like").getChildrenCount());
                     adapter.addItem(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_notice), title, content, uid, countLike);
 
                 }

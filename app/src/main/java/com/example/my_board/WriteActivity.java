@@ -63,16 +63,8 @@ public class WriteActivity extends AppCompatActivity {
                         DatabaseReference contentRef = database.getReference("Content/");
                         if(btitle.equals(title)){
                             DatabaseReference myRef = database.getReference("User/" + user.getUId() + "/likeList");
-                            hashMap.put("like", like);
-                            Log.d("수정 시 like 값" , like);
                             contentRef.child(user.getUId() + title).updateChildren(hashMap);
-                            if(checkLike == true && !bcontent.equals(content)){
-                                int deLike = Integer.parseInt(like) - 1;
-                                contentRef.child(user.getUId() + title + "/like/").setValue(deLike);
-                                myRef.child(user.getUId() + btitle).removeValue();
-                            }
                         }else{
-                            hashMap.put("like", 0);
                             contentRef.child(user.getUId() + title).setValue(hashMap);
                         }
                         contentRef.addValueEventListener(new ValueEventListener() {
@@ -141,7 +133,6 @@ public class WriteActivity extends AppCompatActivity {
                         hashMap.put("uid", user.getUId());
                         hashMap.put("title", title);
                         hashMap.put("content", content);
-                        hashMap.put("like", 0);
 
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference reference = database.getReference("Content");

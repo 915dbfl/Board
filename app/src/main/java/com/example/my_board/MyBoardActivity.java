@@ -80,14 +80,13 @@ public class MyBoardActivity extends AppCompatActivity {
         countLike.setText(intent.getStringExtra("countLike"));
 
         final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        final DatabaseReference myRef = database.getReference("User/" + user.getUId() + "/likeList");
         likeImage.setTag("1");
         if(Integer.parseInt(likeImage.getTag().toString()) == 1){
-            myRef.addValueEventListener(new ValueEventListener() {
+            Ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(Integer.parseInt(likeImage.getTag().toString()) == 1){
-                        if(dataSnapshot.child(user.getUId() + title).getValue() != null){
+                        if(dataSnapshot.child(user.getUId() + title + "/like/" + user.getUId()).getValue() != null){
                             likeImage.setTag("0");
                             likeImage.setChecked(true);
                             likeImage.setTag("2");
@@ -179,11 +178,10 @@ public class MyBoardActivity extends AppCompatActivity {
                 {
                     if(Integer.parseInt(likeImage.getTag().toString()) == 1 || Integer.parseInt(likeImage.getTag().toString()) == 2){
                         like++;
-                        DatabaseReference likeRef = Ref.child(user.getUId() + title + "/like/");
-                        likeRef.setValue(like);
+                        DatabaseReference likeRef = Ref.child(user.getUId() + title + "/like/" + user.getUId());
+                        likeRef.setValue(user.getUId());
                         Toast.makeText(MyBoardActivity.this, "좋아요를 눌렀습니다.", Toast.LENGTH_SHORT).show();
                         countLike.setText(Integer.toString(like));
-                        myRef.child(user.getUId()+title + "/").setValue(title);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean(title + "like", true); // value to store
                         editor.commit();
@@ -193,11 +191,10 @@ public class MyBoardActivity extends AppCompatActivity {
                 {
                     like--;
                     likeImage.setChecked(false);
-                    DatabaseReference likeRef = Ref.child(user.getUId() + title + "/like/");
-                    likeRef.setValue(like);
+                    DatabaseReference likeRef = Ref.child(user.getUId() + title + "/like/" + user.getUId());
+                    likeRef.removeValue();
                     Toast.makeText(MyBoardActivity.this, "좋아요를 취소했습니다.", Toast.LENGTH_SHORT).show();
                     countLike.setText(Integer.toString(like));
-                    myRef.child(user.getUId()+ title+ "/").removeValue();
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean(title + "like", false); // value to store
                     editor.commit();
