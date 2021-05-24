@@ -1,14 +1,14 @@
 package com.example.my_board;
 
+
 import android.widget.Button;
-import android.widget.ExpandableListView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
 public class Holder {
-    TextInputEditText editText;
-    Button editBtn;
-    Button deleteBtn;
-    String boardTitle;
-    int position;
+    public String boardTitle;
+    public TextInputEditText editText;
+    public Button editBtn;
+    public Button deleteBtn;
+    public int position;
 }

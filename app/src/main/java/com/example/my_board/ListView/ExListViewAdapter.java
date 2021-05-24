@@ -1,37 +1,28 @@
-package com.example.my_board;
+package com.example.my_board.ListView;
 
-import android.content.ClipData;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.view.menu.MenuView;
-import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.my_board.Holder;
+import com.example.my_board.ListViewItem;
+import com.example.my_board.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAdapter {
     private ImageView board_icon;
@@ -118,7 +109,6 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
         final ListViewItem listViewItem = mParentList.get(groupPosition);
         System.out.println("로그인한 회원의 id는 " + uid + ", 게시판을 작성한 id는 " + listViewItem.getBoard_uid());
         Holder holder;
-        holder = null;
         System.out.println("가져온 부모 listView는 " +  listViewItem.getBoard_title());
         if(convertView == null){
             Context context = parent.getContext();
@@ -237,4 +227,3 @@ public class ExListViewAdapter<ChildListViewHolder> extends BaseExpandableListAd
     }
 
 }
-
