@@ -10,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.my_board.*
 import com.example.my_board.ListView.ExListViewAdapter
+import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
 import com.google.firebase.database.*
 import java.util.*
 import kotlinx.android.synthetic.main.myboard.*
 
 class MyBoardActivity : AppCompatActivity() {
-    var adapter: ExListViewAdapter<*>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.myboard)
@@ -116,7 +116,7 @@ class MyBoardActivity : AppCompatActivity() {
                 listView.setAdapter(null as BaseExpandableListAdapter?)
                 val parent = ArrayList<ListViewItem>()
                 val childlist = HashMap<ListViewItem, ArrayList<ListViewItem>?>()
-                val adapter = ExListViewAdapter<Any?>(parent, childlist, listView)
+                val adapter = ExListViewAdapter(parent, childlist, listView)
                 adapter.setUId(user.uId)
                 adapter.setBoard_title(board_id)
                 var index = 0
@@ -126,13 +126,13 @@ class MyBoardActivity : AppCompatActivity() {
                     val child = ArrayList<ListViewItem>()
                     val commentContent = parentSnapshot.child("comment/").value.toString()
                     val uid = parentSnapshot.child("uid/").value.toString()
-                    val pitem = ListViewItem(ContextCompat.getDrawable(this@MyBoardActivity, R.drawable.icon_notice), commentContent, uid)
+                    val pitem = ListViewItem(ContextCompat.getDrawable(this@MyBoardActivity, R.drawable.icon_notice)!!, commentContent, uid)
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
                         val ccommentContent = childSnapshot.child("comment/").value.toString()
                         println("댓글은 $commentContent, 대댓글은 $ccommentContent")
                         val cuid = childSnapshot.child("uid/").value.toString()
-                        val citem = ListViewItem(ContextCompat.getDrawable(this@MyBoardActivity, R.drawable.icon_notice), ccommentContent, cuid)
+                        val citem = ListViewItem(ContextCompat.getDrawable(this@MyBoardActivity, R.drawable.icon_notice)!!, ccommentContent, cuid)
                         child.add(citem)
                     }
                     citemList[index - 1] = child
@@ -157,11 +157,7 @@ class MyBoardActivity : AppCompatActivity() {
             }
         })
         listView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            // get item
             val item = parent.getItemAtPosition(position) as ListViewItem
-
-
-            // TODO : use item data.
         }
     }
 }

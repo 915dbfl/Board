@@ -7,6 +7,8 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.my_board.*
+import com.example.my_board.ListView.ListViewAdapter
+import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -18,12 +20,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val database = FirebaseDatabase.getInstance().reference.child("Content")
-
-        //Adapter 생성
         val adapter = ListViewAdapter()
         val user = application as User
 
-        //리스트뷰 참조 및 Adapter달기
         listview.adapter = adapter
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -46,9 +45,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         listview.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            // get item
             val item = parent.getItemAtPosition(position) as ListViewItem
             val titleStr = item.board_title
             val contentStr = item.board_content
@@ -68,9 +65,6 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("countLike", item.countLike)
                 startActivity(intent)
             }
-
-
-            // TODO : use item data.
         }
         Button_main_write.setOnClickListener {
             val intent = Intent(this@MainActivity, WriteActivity::class.java)
