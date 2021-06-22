@@ -22,7 +22,11 @@ internal class LoadingActivity : Activity() {
             val cuser = auth.currentUser
             if (cuser != null) {
                 val user = applicationContext as User
-                user.setUId(cuser.email)
+                if(cuser.email!! == null){
+                    user.setUId(cuser.displayName.toString())
+                }else{
+                    user.setUId(cuser.email!!)
+                }
                 startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
                 finish()
             } else {

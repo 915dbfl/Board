@@ -7,16 +7,14 @@
     >
 
     <ImageView
-        android:layout_gravity="center"
-        android:layout_marginTop="240dp"
-        android:id="@+id/login_image"
-        android:layout_width="300px"
-        android:layout_height="300px"
-        android:src="@drawable/icon_notice"
-        android:layout_centerInParent="true">
-    </ImageView>
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"></ImageView>
 
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,6 +100,31 @@
             android:text="join"
             android:background="@drawable/btn_login_white"
             android:textColor="#ffffff" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/facebook_signin_button"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/btn_signin_facebook"
+            android:textColor="@color/colorWhite"
+            android:text="Login by facebook">
+        </Button>
+        <Button
+            android:id="@+id/google_signin_button"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_signin_google"
+            android:textColor="@color/colorWhite"
+            android:text="Login by google">
+        </Button>
+
     </LinearLayout>
 
 

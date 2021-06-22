@@ -1,6 +1,7 @@
 package com.example.my_board
 
 import android.app.Application
+import android.util.Log
 
 class User : Application() {
     var uId: String? = null
@@ -14,6 +15,11 @@ class User : Application() {
 
     fun setUId(uid: String) {
         val num = uid.indexOf("@")
-        uId = uid.substring(0, num)
+        if(num == -1){
+            Log.d("=========================================uid", uid)
+            uId = uid
+        } else{
+            uId = uid.substring(0, num)
+        }
     }
 }
