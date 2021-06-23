@@ -1,28 +1,37 @@
-package com.example.my_board.Activity
+package com.example.my_board.navigation
 
-import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.my_board.Activity.MainActivity
 import com.example.my_board.R
 import com.example.my_board.User
-import com.google.firebase.database.*
-import java.util.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.write.*
+import java.util.HashMap
 
-class WriteActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.write)
-        val intent = intent
-        val user = application as User
+class WriteFragment : Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        var view = LayoutInflater.from(activity).inflate(R.layout.write, container, false)
+        val applicationContext = activity?.applicationContext
+        val user : User = applicationContext as User
+        val intent = Intent()
         if (intent.getStringExtra("title") != null && intent.getStringExtra("content") != null) {
             val btitle = intent.getStringExtra("title").toString()
             val bcontent = intent.getStringExtra("content").toString()
-            TextInputEditText_content.text = bcontent.toEditable()
-            TextInputEditText_title.text = btitle.toEditable()
+            TextInputEditText_content.text = bcontent as Editable
+            TextInputEditText_title.text = btitle as Editable
             Button_write.setOnClickListener {
                 val title = TextInputEditText_title.text.toString().trim { it <= ' ' }
                 val content = TextInputEditText_content.text.toString().trim { it <= ' ' }
@@ -72,21 +81,21 @@ class WriteActivity : Activity() {
                     }
 
                     //가입이 이루어졌을 시 가입 화면을 빠져나감.
-                    Toast.makeText(this@WriteActivity, "글이 게시되었습니다.", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@WriteActivity, MainActivity::class.java)
+                    Toast.makeText(context, "글이 게시되었습니다.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, MainActivity::class.java)
                     startActivity(intent)
-                    finish()
+                    activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
                 } else {
-                    Toast.makeText(this@WriteActivity, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
-            Button_write.setOnClickListener {
+            Button_write?.setOnClickListener {
                 val title = TextInputEditText_title.text.toString().trim { it <= ' ' }
                 val content = TextInputEditText_content.text.toString().trim { it <= ' ' }
                 println("$title,$content")
                 if (title.isEmpty() || content.isEmpty()) {
-                    Toast.makeText(this@WriteActivity, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
                     //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
                     val hashMap = HashMap<String, Any>()
@@ -98,14 +107,14 @@ class WriteActivity : Activity() {
                     reference.child(user.uId + title).setValue(hashMap)
 
                     //가입이 이루어졌을 시 가입 화면을 빠져나감.
-                    Toast.makeText(this@WriteActivity, "글이 게시되었습니다.", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@WriteActivity, MainActivity::class.java)
+                    Toast.makeText(context, "글이 게시되었습니다.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, MainActivity::class.java)
                     startActivity(intent)
-                    finish()
+                    activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
                 }
             }
         }
+        fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
+        return view
     }
-
-    fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 }

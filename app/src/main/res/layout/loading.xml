@@ -9,14 +9,7 @@
         android:layout_centerVertical="true"
         android:layout_width="500dp"
         android:layout_height="400px"
-        android:src="@drawable/logo">
+        android:src="@drawable/together">
     </ImageView>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Boar"
-        >
-
-    </TextView>
 
 </RelativeLayout>

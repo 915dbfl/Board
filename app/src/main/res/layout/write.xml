@@ -2,30 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBrightBlue"
+    android:background="@color/colorWhite"
     android:orientation="vertical"
     >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20px"
-        android:orientation="horizontal">
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginTop="20px"-->
+<!--        android:orientation="horizontal">-->
 
-        <ImageView
-            android:id="@+id/login_image"
-            android:layout_width="100px"
-            android:layout_height="100px"
-            android:src="@drawable/icon_notice"></ImageView>
+<!--        <ImageView-->
+<!--            android:id="@+id/login_image"-->
+<!--            android:layout_width="100px"-->
+<!--            android:layout_height="100px"-->
+<!--            android:src="@drawable/icon_notice"></ImageView>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10px"
-            android:textColor="@color/colorBlack"
-            android:text="write your story!">
-        </TextView>
-    </LinearLayout>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10px"-->
+<!--            android:textColor="@color/colorBlack"-->
+<!--            android:text="write your story!">-->
+<!--        </TextView>-->
+<!--    </LinearLayout>-->
 
 
     <LinearLayout
