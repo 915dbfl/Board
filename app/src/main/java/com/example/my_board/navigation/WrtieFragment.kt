@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.write.*
+import kotlinx.android.synthetic.main.write.view.*
 import java.util.HashMap
 
 class WriteFragment : Fragment() {
@@ -90,7 +91,7 @@ class WriteFragment : Fragment() {
                 }
             }
         } else {
-            Button_write?.setOnClickListener {
+            view.Button_write.setOnClickListener {
                 val title = TextInputEditText_title.text.toString().trim { it <= ' ' }
                 val content = TextInputEditText_content.text.toString().trim { it <= ' ' }
                 println("$title,$content")

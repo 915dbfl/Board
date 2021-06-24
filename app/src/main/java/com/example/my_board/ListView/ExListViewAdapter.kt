@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
 class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, private var mChildHashMap: HashMap<ListViewItem, ArrayList<ListViewItem>?>, private val listView: ExpandableListView) : BaseExpandableListAdapter() {
-    private var board_icon: ImageView? = null
+//    private var board_icon: ImageView? = null
     private var board_title: TextView? = null
     private var board_uid: TextView? = null
     private var uid: String? = null
@@ -127,12 +127,12 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
             }
         }
 
-        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
-        board_title = convertView.findViewById<View>(R.id.board_title) as TextView
+//        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
+        board_title = convertView!!.findViewById<View>(R.id.board_title) as TextView
         board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
 
         //아이템 내 각 위젯에 데이터 반영
-        board_icon!!.setImageDrawable(listViewItem.board_icon)
+//        board_icon!!.setImageDrawable(listViewItem.board_icon)
         board_title!!.text = listViewItem.board_title
         board_uid!!.text = listViewItem.board_uid
         return convertView
@@ -148,15 +148,15 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
         }
 
         //화면에 표시될 View(Layout이 infate된)으로부터 위젯에 대한 참조 획득
-        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
-        board_title = convertView.findViewById<View>(R.id.board_title) as TextView
+//        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
+        board_title = convertView!!.findViewById<View>(R.id.board_title) as TextView
         board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
         likePart = convertView.findViewById<View>(R.id.likePart) as LinearLayout
         likePart!!.visibility = View.INVISIBLE
 
 
         //아이템 내 각 위젯에 데이터 반영
-        board_icon!!.setImageDrawable(listViewItem.board_icon)
+//        board_icon!!.setImageDrawable(listViewItem.board_icon)
         board_title!!.text = listViewItem.board_title
         println("제목, 내용 확인해보기" + listViewItem.board_title + ", " + listViewItem.board_uid)
         board_uid!!.text = listViewItem.board_uid

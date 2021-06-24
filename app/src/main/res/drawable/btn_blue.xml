@@ -6,7 +6,7 @@
             <solid android:color="@color/colorBrightBlue">
 
             </solid>
-            <corners android:radius="100dp">
+            <corners android:radius="25dp">
 
             </corners>
         </shape>
@@ -25,7 +25,7 @@
 
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="100dp">
+            <corners android:radius="25dp">
 
             </corners>
 

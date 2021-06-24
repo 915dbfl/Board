@@ -126,13 +126,13 @@ class MyBoardActivity : AppCompatActivity() {
                     val child = ArrayList<ListViewItem>()
                     val commentContent = parentSnapshot.child("comment/").value.toString()
                     val uid = parentSnapshot.child("uid/").value.toString()
-                    val pitem = ListViewItem(ContextCompat.getDrawable(this@MyBoardActivity, R.drawable.icon_notice)!!, commentContent, uid)
+                    val pitem = ListViewItem(commentContent, uid)
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
                         val ccommentContent = childSnapshot.child("comment/").value.toString()
                         println("댓글은 $commentContent, 대댓글은 $ccommentContent")
                         val cuid = childSnapshot.child("uid/").value.toString()
-                        val citem = ListViewItem(ContextCompat.getDrawable(this@MyBoardActivity, R.drawable.icon_notice)!!, ccommentContent, cuid)
+                        val citem = ListViewItem(ccommentContent, cuid)
                         child.add(citem)
                     }
                     citemList[index - 1] = child

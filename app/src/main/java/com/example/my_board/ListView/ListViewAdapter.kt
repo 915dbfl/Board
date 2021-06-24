@@ -12,7 +12,7 @@ import java.util.*
 
 
 class ListViewAdapter : BaseAdapter() {
-    private var board_icon: ImageView? = null
+//    private var board_icon: ImageView? = null
     private var board_title: TextView? = null
     private var board_uid: TextView? = null
     private var countLike: TextView? = null
@@ -35,11 +35,11 @@ class ListViewAdapter : BaseAdapter() {
             convertView = inflater.inflate(R.layout.listview_item, parent, false)
         }
         if(convertView != null){
-            board_icon = convertView.findViewById<View>(R.id.board_img) as ImageView
+//            board_icon = convertView.findViewById<View>(R.id.board_img) as ImageView
             board_title = convertView.findViewById<View>(R.id.board_title) as TextView
             board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
             countLike = convertView.findViewById<View>(R.id.countLike) as TextView
-            board_icon!!.setImageDrawable(listViewItem.board_icon)
+//            board_icon!!.setImageDrawable(listViewItem.board_icon)
             board_title!!.text = listViewItem.board_title
             board_uid!!.text = listViewItem.board_uid
             countLike!!.text = listViewItem.countLike
@@ -56,8 +56,8 @@ class ListViewAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
 
-    fun addItem(icon: Drawable?, title: String?, content: String?, uid: String?, countLike: String?) {
-        val item = ListViewItem(icon!!, title!!, uid!!)
+    fun addItem(title: String?, content: String?, uid: String?, countLike: String?) {
+        val item = ListViewItem(title!!, uid!!)
         item.board_content = content
         if(countLike != null){
             item.countLike = countLike!!
