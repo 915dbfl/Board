@@ -1,16 +1,13 @@
 package com.example.my_board.navigation
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.example.my_board.Activity.MyBoardActivity
 import com.example.my_board.ListView.ListViewAdapter
 import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
@@ -19,7 +16,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.main_detail.*
 import kotlinx.android.synthetic.main.main_detail.view.*
 
 class MainFragment : Fragment() {
@@ -60,14 +56,13 @@ class MainFragment : Fragment() {
             val fragmentTransaction : FragmentTransaction = fragmentManager!!.beginTransaction()
             if (item.board_uid == user.uId) {
                 val bundle = Bundle()
-                val intent = Intent(context, MyBoardActivity::class.java)
+                val myboardFragment = MyBoardFragment()
                 bundle.putString("title", titleStr)
                 bundle.putString("content", contentStr)
                 bundle.putString("board_id", item.board_uid + titleStr)
                 bundle.putString("countLike", item.countLike)
-                MainFragment().arguments = bundle
-                startActivity(intent)
-
+                myboardFragment.arguments = bundle
+                fragmentTransaction.replace(R.id.main_content, myboardFragment).commit();
             } else {
                 val bundle = Bundle()
                 val boardFragment = BoardFragment()
