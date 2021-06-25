@@ -144,15 +144,15 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
         if (convertView == null) {
             val context = parent?.context
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView = inflater.inflate(R.layout.listview_item, parent, false)
+            convertView = inflater.inflate(R.layout.listview_citem, parent, false)
         }
 
         //화면에 표시될 View(Layout이 infate된)으로부터 위젯에 대한 참조 획득
 //        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
         board_title = convertView!!.findViewById<View>(R.id.board_title) as TextView
         board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
-        likePart = convertView.findViewById<View>(R.id.likePart) as LinearLayout
-        likePart!!.visibility = View.INVISIBLE
+//        likePart = convertView.findViewById<View>(R.id.likePart) as LinearLayout
+//        likePart!!.visibility = View.INVISIBLE
 
 
         //아이템 내 각 위젯에 데이터 반영

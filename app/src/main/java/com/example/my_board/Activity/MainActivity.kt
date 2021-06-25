@@ -16,6 +16,7 @@ import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
 import com.example.my_board.navigation.BoardFragment
 import com.example.my_board.navigation.MainFragment
+import com.example.my_board.navigation.SearchFragment
 import com.example.my_board.navigation.WriteFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -60,8 +61,8 @@ class MainActivity : AppCompatActivity(){
                         supportFragmentManager.beginTransaction().replace(R.id.main_content,writeFragment).commit()
                     }
                     R.id.action_search -> {
-                        var writeFragment = WriteFragment()
-                        supportFragmentManager.beginTransaction().replace(R.id.main_content,writeFragment).commit()
+                        var searchFragment = SearchFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_content,searchFragment).commit()
                     }
                 }
                 true

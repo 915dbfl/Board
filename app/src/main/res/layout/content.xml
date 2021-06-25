@@ -24,7 +24,7 @@
                 android:clickable="true"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/logout"
+                android:src="@drawable/ic_logout"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"

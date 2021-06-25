@@ -33,6 +33,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_width="match_parent"
@@ -52,7 +53,6 @@
             </TextView>
         </LinearLayout>
         <Button
-            android:layout_marginTop="20dp"
             android:id="@+id/Button_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             <ToggleButton
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/likestate"
+                android:background="@drawable/ic_likestate"
                 android:textOff=""
                 android:textOn=""
                 android:id="@+id/likeImage">
