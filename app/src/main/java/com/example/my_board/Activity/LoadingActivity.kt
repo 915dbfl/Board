@@ -26,6 +26,8 @@ internal class LoadingActivity : Activity() {
                     user.setUId(cuser.displayName.toString())
                 }else{
                     user.setUId(cuser.email!!)
+                    user.gender = "man"
+                    user.job = "teacher"
                 }
                 startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
                 finish()

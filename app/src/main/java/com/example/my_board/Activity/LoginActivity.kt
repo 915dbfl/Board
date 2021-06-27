@@ -1,11 +1,8 @@
 package com.example.my_board.Activity
 
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,9 +20,11 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.login.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 
@@ -37,8 +36,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
-        firebaseAuth = FirebaseAuth.getInstance()
+        val database = FirebaseDatabase.getInstance()
         val user : User = applicationContext as User
+        firebaseAuth = FirebaseAuth.getInstance()
         Button_login.setOnClickListener {
             if (TextUtils.isEmpty(TextInputEditText_id.text) || TextUtils.isEmpty(TextInputEditText_password.text)) {
                 Toast.makeText(this@LoginActivity, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -48,7 +48,28 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuth!!.signInWithEmailAndPassword(id, pw).addOnCompleteListener(this@LoginActivity, OnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val cuser = firebaseAuth!!.currentUser
-                        user!!.setUId(cuser!!.email!!)
+                        user.setUId(cuser!!.email!!)
+                        Log.d("=================================", user.gender + user.job + user.uId)
+                        val refUserGender = database.getReference("User/"+user.uId+"/gender")
+                        val refUserJob = database.getReference("User/"+user.uId+"/job")
+                        refUserGender.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                user.gender = dataSnapshot.getValue().toString()
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                // ...
+                            }
+                        })
+                        refUserJob.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                user.job = dataSnapshot.getValue().toString()
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                // ...
+                            }
+                        })
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -145,20 +166,20 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
     }
-    fun printHashKey() {
-        try {
-            val info: PackageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
-            for (signature in info.signatures) {
-                val md: MessageDigest = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                val hashKey: String = String(Base64.encode(md.digest(), 0))
-                Log.i("TAG", "printHashKey() Hash Key: $hashKey")
-            }
-        } catch (e: NoSuchAlgorithmException) {
-            Log.e("TAG", "printHashKey()", e)
-        } catch (e: Exception) {
-            Log.e("TAG", "printHashKey()", e)
-        }
-    }
+//    fun printHashKey() {
+//        try {
+//            val info: PackageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+//            for (signature in info.signatures) {
+//                val md: MessageDigest = MessageDigest.getInstance("SHA")
+//                md.update(signature.toByteArray())
+//                val hashKey: String = String(Base64.encode(md.digest(), 0))
+//                Log.i("TAG", "printHashKey() Hash Key: $hashKey")
+//            }
+//        } catch (e: NoSuchAlgorithmException) {
+//            Log.e("TAG", "printHashKey()", e)
+//        } catch (e: Exception) {
+//            Log.e("TAG", "printHashKey()", e)
+//        }
+//    }
 
 }

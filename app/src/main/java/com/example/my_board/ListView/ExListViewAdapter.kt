@@ -11,16 +11,19 @@ import android.widget.*
 import com.example.my_board.Holder
 import com.example.my_board.R
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.*
 
 class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, private var mChildHashMap: HashMap<ListViewItem, ArrayList<ListViewItem>?>, private val listView: ExpandableListView) : BaseExpandableListAdapter() {
-//    private var board_icon: ImageView? = null
+    private var board_icon: ImageView? = null
     private var board_title: TextView? = null
     private var board_uid: TextView? = null
     private var uid: String? = null
+    private var character: String? = null
     private var title: String? = null
-    private var likePart: LinearLayout? = null
     fun setmParentList(parentList: ArrayList<ListViewItem>) {
         mParentList = parentList
     }
@@ -31,6 +34,10 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
 
     fun setUId(uid: String?) {
         this.uid = uid
+    }
+
+    fun setCharacter(character: String?){
+        this.character = character
     }
 
     fun setBoard_title(title: String?) {
@@ -75,9 +82,10 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
         val holder: Holder
         if (convertView == null) {
             val context = parent?.context
+            val database = FirebaseDatabase.getInstance()
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             holder = Holder()
             holder.boardTitle = listViewItem.board_title
-            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.listview_mcitem, parent, false)
             holder.deleteBtn = convertView.findViewById<View>(R.id.content_delete) as Button
             if (listViewItem.board_uid != uid) {
@@ -121,18 +129,19 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
                 val hashMap = HashMap<Any, String?>()
                 hashMap["comment"] = content
                 hashMap["uid"] = uid
+                hashMap["character"]=character
                 val database = FirebaseDatabase.getInstance()
-                val reference = database.getReference("Content/" + title + "/comment/" + uid + mParentList[holder.position].board_title + "/")
+                val reference = database.getReference("Content/" + title + "/comment/" + mParentList[holder.position].board_uid + mParentList[holder.position].board_title + "/")
                 reference.child("ccomment/$uid$content/").setValue(hashMap)
             }
         }
 
-//        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
+        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
         board_title = convertView!!.findViewById<View>(R.id.board_title) as TextView
         board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
 
         //아이템 내 각 위젯에 데이터 반영
-//        board_icon!!.setImageDrawable(listViewItem.board_icon)
+        board_icon!!.setImageDrawable(listViewItem.character)
         board_title!!.text = listViewItem.board_title
         board_uid!!.text = listViewItem.board_uid
         return convertView
@@ -148,15 +157,12 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
         }
 
         //화면에 표시될 View(Layout이 infate된)으로부터 위젯에 대한 참조 획득
-//        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
+        board_icon = convertView!!.findViewById<View>(R.id.board_img) as ImageView
         board_title = convertView!!.findViewById<View>(R.id.board_title) as TextView
         board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
-//        likePart = convertView.findViewById<View>(R.id.likePart) as LinearLayout
-//        likePart!!.visibility = View.INVISIBLE
-
 
         //아이템 내 각 위젯에 데이터 반영
-//        board_icon!!.setImageDrawable(listViewItem.board_icon)
+        board_icon!!.setImageDrawable(listViewItem.character)
         board_title!!.text = listViewItem.board_title
         println("제목, 내용 확인해보기" + listViewItem.board_title + ", " + listViewItem.board_uid)
         board_uid!!.text = listViewItem.board_uid

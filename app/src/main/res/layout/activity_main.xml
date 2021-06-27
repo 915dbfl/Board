@@ -62,6 +62,7 @@
         android:layout_marginBottom="4dp"
         android:background="@color/colorBrightBlue"
         app:itemIconTint="@drawable/menu_color"
+        app:itemTextColor="@drawable/menu_color"
         app:menu="@menu/bottom_navigation_main"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
 

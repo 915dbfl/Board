@@ -33,7 +33,7 @@
                 android:id="@+id/board_img"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/comment_writer"
+                android:src="@drawable/icon_notice"
                 android:layout_weight="1">
             </ImageView>
             <LinearLayout

@@ -103,6 +103,7 @@ class WriteFragment : Fragment() {
                     hashMap["uid"] = user.uId!!
                     hashMap["title"] = title
                     hashMap["content"] = content
+                    hashMap["character"] = user.gender + user.job
                     val database = FirebaseDatabase.getInstance()
                     val reference = database.getReference("Content")
                     reference.child(user.uId + title).setValue(hashMap)

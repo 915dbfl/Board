@@ -1,6 +1,8 @@
 package com.example.my_board.Activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.widget.AdapterView.OnItemClickListener
@@ -30,8 +32,9 @@ class MainActivity : AppCompatActivity(){
         val adapter = ListViewAdapter()
         listview.adapter = adapter
         var mainFragment = MainFragment()
-        initNavigationBart()
         supportFragmentManager.beginTransaction().replace(R.id.main_content,mainFragment).commit()
+        initNavigationBart()
+
 
         btn_logout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity(){
         }
 
     }
+
     private fun initNavigationBart(){
         bottom_navigation.run {
             setOnNavigationItemSelectedListener {

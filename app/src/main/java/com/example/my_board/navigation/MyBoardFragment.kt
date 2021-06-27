@@ -1,6 +1,7 @@
 package com.example.my_board.navigation
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.my_board.*
@@ -28,7 +30,6 @@ class MyBoardFragment : Fragment() {
         val Ref = database.getReference("Content")
         val applicationContext = activity?.applicationContext
         val user : User = applicationContext as User
-        val intent = Intent()
         val board_id = arguments?.getString("board_id")
         val title = arguments?.getString("title")
         val content = arguments?.getString("content")
@@ -72,6 +73,7 @@ class MyBoardFragment : Fragment() {
                 val hashMap = HashMap<Any, String>()
                 hashMap["comment"] = comment
                 hashMap["uid"] = user.uId!!
+                hashMap["character"] = user.gender+user.job
                 val database = FirebaseDatabase.getInstance()
                 val reference = database.getReference("Content/$board_id/")
                 reference.child("comment/" + user.uId + comment + '/').setValue(hashMap)
@@ -122,6 +124,7 @@ class MyBoardFragment : Fragment() {
                 val childlist = HashMap<ListViewItem, ArrayList<ListViewItem>?>()
                 val adapter = ExListViewAdapter(parent, childlist, view.comment_listview)
                 adapter.setUId(user.uId)
+                adapter.setUId(user.gender+user.job)
                 adapter.setBoard_title(board_id)
                 var index = 0
                 val citemList = HashMap<Int, ArrayList<ListViewItem>>()
@@ -130,13 +133,15 @@ class MyBoardFragment : Fragment() {
                     val child = ArrayList<ListViewItem>()
                     val commentContent = parentSnapshot.child("comment/").value.toString()
                     val uid = parentSnapshot.child("uid/").value.toString()
-                    val pitem = ListViewItem(commentContent, uid)
+                    val characeter = parentSnapshot.child("character/").value.toString()
+                    val pitem = ListViewItem(commentContent, uid, user.characterImage(characeter))
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
                         val ccommentContent = childSnapshot.child("comment/").value.toString()
                         println("댓글은 $commentContent, 대댓글은 $ccommentContent")
                         val cuid = childSnapshot.child("uid/").value.toString()
-                        val citem = ListViewItem(ccommentContent, cuid)
+                        val character = childSnapshot.child("character/").value.toString()
+                        val citem = ListViewItem(ccommentContent, cuid, user.characterImage(character))
                         child.add(citem)
                     }
                     citemList[index - 1] = child

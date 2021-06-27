@@ -1,6 +1,7 @@
 package com.example.my_board.navigation
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.my_board.*
 import com.example.my_board.Activity.MainActivity
@@ -70,6 +72,7 @@ class BoardFragment : Fragment() {
                 val hashMap = HashMap<Any, String>()
                 hashMap["comment"] = comment
                 hashMap["uid"] = user.uId!!
+                hashMap["characeter"] = user.gender+user.job
                 val database = FirebaseDatabase.getInstance()
                 val reference = database.getReference("Content/$board_id/")
                 reference.child("comment/" + user.uId + comment + '/').setValue(hashMap)
@@ -114,19 +117,19 @@ class BoardFragment : Fragment() {
                     val child = ArrayList<ListViewItem>()
                     val commentContent = parentSnapshot.child("comment/").value.toString()
                     val uid = parentSnapshot.child("uid/").value.toString()
-                    val pitem = ListViewItem( commentContent, uid)
+                    val character = parentSnapshot.child("character/").value.toString()
+                    val pitem = ListViewItem( commentContent, uid, user.characterImage(character))
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
                         val ccommentContent = childSnapshot.child("comment/").value.toString()
-                        println("댓글은 $commentContent, 대댓글은 $ccommentContent")
                         val cuid = childSnapshot.child("uid/").value.toString()
-                        val citem = ListViewItem(ccommentContent, cuid)
+                        val character = childSnapshot.child("character/").value.toString()
+                        val citem = ListViewItem(ccommentContent, cuid, user.characterImage(character))
                         child.add(citem)
                     }
                     citemList[index - 1] = child
                     if (!child.isEmpty()) {
                         childlist[parent[index - 1]] = citemList[index - 1]!!
-//                        println(parent[index - 1].board_title + "에 맵핑 완료!!!")
                     }
                 }
                 adapter.setmParentList(parent)

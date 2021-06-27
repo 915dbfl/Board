@@ -1,13 +1,16 @@
 package com.example.my_board.navigation
 
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.example.my_board.Activity.MainActivity
 import com.example.my_board.ListView.ListViewAdapter
 import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
@@ -34,8 +37,9 @@ class MainFragment : Fragment() {
                     val title = Snapshot.child("title").value.toString()
                     val content = Snapshot.child("content").value.toString()
                     val uid = Snapshot.child("uid").value.toString()
+                    val character = Snapshot.child("character").value.toString()
                     val countLike = Integer.toString(Snapshot.child("like").childrenCount.toInt())
-                    adapter.addItem(title, content, uid, countLike)
+                    adapter.addItem(title, content, uid, countLike, user.characterImage(character))
                 }
                 adapter.notifyDataSetChanged()
                 view.board_listview.adapter = adapter
@@ -47,8 +51,6 @@ class MainFragment : Fragment() {
             }
         })
 
-
-        //board_listview null로 처리되는거 해결해야 함.
         view.board_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val item = parent.getItemAtPosition(position) as ListViewItem
             val titleStr = item.board_title
@@ -77,6 +79,4 @@ class MainFragment : Fragment() {
         }
         return view
     }
-
-
 }

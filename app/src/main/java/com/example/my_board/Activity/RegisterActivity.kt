@@ -1,10 +1,13 @@
 package com.example.my_board.Activity
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.example.my_board.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +21,57 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register)
         firebaseAuth = FirebaseAuth.getInstance()
+        var job : String = "student"
+        var gender : String = "man"
+        var character: String = gender + job
+        gender_man.setOnClickListener(){
+            if(gender_man.isChecked){
+                gender = "man"
+                if(job.equals("teacher")){
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_teacher2) as BitmapDrawable)
+                }else{
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_student2) as BitmapDrawable)
+                }
+            }
+        }
+        gender_woman.setOnClickListener(){
+            if(gender_woman.isChecked){
+                gender = "woman"
+                if(job.equals("teacher")){
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_teacher1) as BitmapDrawable)
+                }else{
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_student1) as BitmapDrawable)
+                }
+            }
+        }
+        job_teacher.setOnClickListener(){
+            if(job_teacher.isChecked){
+                job = "teacher"
+                if(gender.equals("woman")){
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_teacher1) as BitmapDrawable)
+                }else{
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_teacher2) as BitmapDrawable)
+                }
+            }
+        }
+        job_student.setOnClickListener(){
+            if(job_student.isChecked){
+                job = "student"
+                if(gender.equals("woman")){
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_student1) as BitmapDrawable)
+                }else{
+                    character = gender + job
+                    character_image.setImageDrawable(resources.getDrawable(R.drawable.ic_student2) as BitmapDrawable)
+                }
+            }
+        }
 
         Button_register!!.setOnClickListener {
             if (TextUtils.isEmpty(TextView_register_id!!.text) || TextUtils.isEmpty(TextView_register_pw!!.text)) {
@@ -25,6 +79,7 @@ class RegisterActivity : AppCompatActivity() {
             } else {
                 val email = TextView_register_id!!.text.toString()
                 val pw = TextView_register_pw!!.text.toString()
+
                 firebaseAuth!!.createUserWithEmailAndPassword(email, pw).addOnCompleteListener(this@RegisterActivity, OnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = firebaseAuth!!.currentUser
@@ -35,6 +90,9 @@ class RegisterActivity : AppCompatActivity() {
                         hashMap["email"] = email!!
                         hashMap["pw"] = pw
                         hashMap["uid"] = user.email!!.substring(0, num!!)
+                        hashMap["job"] = job
+                        hashMap["gender"]= gender
+                        hashMap["character"]= character
                         val database = FirebaseDatabase.getInstance()
                         val reference = database.getReference("User")
                         reference.child(user.email!!.substring(0, num)).setValue(hashMap)

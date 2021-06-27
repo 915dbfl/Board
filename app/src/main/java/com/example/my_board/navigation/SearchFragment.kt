@@ -1,5 +1,6 @@
 package com.example.my_board.navigation
 
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.my_board.ListView.ListViewAdapter
@@ -52,8 +54,9 @@ class SearchFragment : Fragment() {
                         val title = Snapshot.child("title").value.toString()
                         val content = Snapshot.child("content").value.toString()
                         val uid = Snapshot.child("uid").value.toString()
+                        val character = Snapshot.child("character").value.toString()
                         val countLike = Integer.toString(Snapshot.child("like").childrenCount.toInt())
-                        adapter.addItem(title, content, uid, countLike)
+                        adapter.addItem(title, content, uid, countLike, characterImage(character))
                     }
                     adapter.notifyDataSetChanged()
                     view.board_listview.adapter = adapter
@@ -93,5 +96,16 @@ class SearchFragment : Fragment() {
             }
         }
         return view
+    }
+    fun characterImage(character: String): BitmapDrawable {
+        if(character.equals("womanstudent")){
+            return ResourcesCompat.getDrawable(resources, R.drawable.ic_student1, null) as BitmapDrawable
+        }else if(character.equals("manstudent")){
+            return ResourcesCompat.getDrawable(resources, R.drawable.ic_student2, null) as BitmapDrawable
+        }else if(character.equals("womanteacher")){
+            return ResourcesCompat.getDrawable(resources, R.drawable.ic_teacher1, null) as BitmapDrawable
+        }else{
+            return ResourcesCompat.getDrawable(resources, R.drawable.ic_teacher2, null) as BitmapDrawable
+        }
     }
 }

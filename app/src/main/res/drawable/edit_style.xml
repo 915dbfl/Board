@@ -6,7 +6,7 @@
 <!--    <solid android:color="@color/colorBrightBlue" />-->
 
     <stroke
-        android:width="2px"
+        android:width="3px"
         android:color="#5F5F5F" />
     <corners
         android:topLeftRadius="12dp"

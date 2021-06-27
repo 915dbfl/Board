@@ -1,16 +1,18 @@
 package com.example.my_board.ListView
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.res.ResourcesCompat
 import com.example.my_board.R
 import java.util.*
 
 
 class ListViewAdapter : BaseAdapter(), Filterable {
-//    private var board_icon: ImageView? = null
+    private var board_icon: ImageView? = null
     private var listFiter : Filter? = null
     private var board_title: TextView? = null
     private var board_uid: TextView? = null
@@ -33,11 +35,11 @@ class ListViewAdapter : BaseAdapter(), Filterable {
             convertView = inflater.inflate(R.layout.listview_item, parent, false)
         }
         if(convertView != null){
-//            board_icon = convertView.findViewById<View>(R.id.board_img) as ImageView
+            board_icon = convertView.findViewById<View>(R.id.character_image) as ImageView
             board_title = convertView.findViewById<View>(R.id.board_title) as TextView
             board_uid = convertView.findViewById<View>(R.id.board_uid) as TextView
             countLike = convertView.findViewById<View>(R.id.countLike) as TextView
-//            board_icon!!.setImageDrawable(listViewItem.board_icon)
+            board_icon!!.setImageDrawable(listViewItem.character)
             board_title!!.text = listViewItem.board_title
             board_uid!!.text = listViewItem.board_uid
             countLike!!.text = listViewItem.countLike
@@ -54,8 +56,8 @@ class ListViewAdapter : BaseAdapter(), Filterable {
         return filteredItemList[position]
     }
 
-    fun addItem(title: String?, content: String?, uid: String?, countLike: String?) {
-        val item = ListViewItem(title!!, uid!!)
+    fun addItem(title: String?, content: String?, uid: String?, countLike: String?, icon: BitmapDrawable) {
+        val item = ListViewItem(title!!, uid!!, icon)
         item.board_content = content
         if(countLike != null){
             item.countLike = countLike!!
@@ -88,13 +90,10 @@ class ListViewAdapter : BaseAdapter(), Filterable {
                 results.count = listViewItemList.size
             }else{
                 val itemList = ArrayList<ListViewItem>()
-                Log.d("==========================????", listViewItemList.size.toString())
                 for(item in listViewItemList){
-                    Log.d("==========================필터링", item.board_title + item.board_uid)
-                    if (item.board_uid.toUpperCase().contains(constraint.toString().toUpperCase()) ||
+                    if (item.board_uid!!.toUpperCase().contains(constraint.toString().toUpperCase()) ||
                             item.board_title!!.toUpperCase().contains(constraint.toString().toUpperCase()))
                     {
-                        Log.d("==========================필터링 결과", item.board_title + item.board_uid)
                         itemList.add(item) ;
                     }
                 }
