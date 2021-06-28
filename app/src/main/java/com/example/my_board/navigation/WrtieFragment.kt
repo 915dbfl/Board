@@ -27,13 +27,12 @@ class WriteFragment : Fragment() {
         var view = LayoutInflater.from(activity).inflate(R.layout.write, container, false)
         val applicationContext = activity?.applicationContext
         val user : User = applicationContext as User
-        val intent = Intent()
-        if (intent.getStringExtra("title") != null && intent.getStringExtra("content") != null) {
-            val btitle = intent.getStringExtra("title").toString()
-            val bcontent = intent.getStringExtra("content").toString()
-            TextInputEditText_content.text = bcontent as Editable
-            TextInputEditText_title.text = btitle as Editable
-            Button_write.setOnClickListener {
+        if (arguments?.getString("title") != null && arguments?.getString("content") != null) {
+            val btitle = arguments?.getString("title").toString()
+            val bcontent = arguments?.getString("content").toString()
+            view.TextInputEditText_content.setText(bcontent)
+            view.TextInputEditText_title.setText(btitle)
+            view.Button_write.setOnClickListener {
                 val title = TextInputEditText_title.text.toString().trim { it <= ' ' }
                 val content = TextInputEditText_content.text.toString().trim { it <= ' ' }
                 if (title !== "" && content !== "") {

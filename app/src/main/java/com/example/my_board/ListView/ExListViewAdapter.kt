@@ -82,7 +82,6 @@ class ExListViewAdapter(private var mParentList: ArrayList<ListViewItem>, privat
         val holder: Holder
         if (convertView == null) {
             val context = parent?.context
-            val database = FirebaseDatabase.getInstance()
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             holder = Holder()
             holder.boardTitle = listViewItem.board_title

@@ -7,6 +7,10 @@ import android.os.Handler
 import com.example.my_board.R
 import com.example.my_board.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 internal class LoadingActivity : Activity() {
     var auth = FirebaseAuth.getInstance()
@@ -26,8 +30,27 @@ internal class LoadingActivity : Activity() {
                     user.setUId(cuser.displayName.toString())
                 }else{
                     user.setUId(cuser.email!!)
-                    user.gender = "man"
-                    user.job = "teacher"
+                    val database = FirebaseDatabase.getInstance()
+                    val refUserGender = database.getReference("User/"+user.uId+"/gender")
+                    val refUserJob = database.getReference("User/"+user.uId+"/job")
+                    refUserGender.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            user.gender = dataSnapshot.getValue().toString()
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            user.gender = "man"
+                        }
+                    })
+                    refUserJob.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            user.job = dataSnapshot.getValue().toString()
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            user.job = "teacher"
+                        }
+                    })
                 }
                 startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
                 finish()

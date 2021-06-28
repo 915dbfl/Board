@@ -37,7 +37,7 @@
         <ListView
             android:textFilterEnabled="true"
             android:id="@+id/board_listview"
-            android:layout_width="400dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
         </ListView>
     </LinearLayout>

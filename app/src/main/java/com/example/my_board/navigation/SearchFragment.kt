@@ -56,7 +56,7 @@ class SearchFragment : Fragment() {
                         val uid = Snapshot.child("uid").value.toString()
                         val character = Snapshot.child("character").value.toString()
                         val countLike = Integer.toString(Snapshot.child("like").childrenCount.toInt())
-                        adapter.addItem(title, content, uid, countLike, characterImage(character))
+                        adapter.addItem(title, content, uid, countLike, user.characterImage(character))
                     }
                     adapter.notifyDataSetChanged()
                     view.board_listview.adapter = adapter
@@ -96,16 +96,5 @@ class SearchFragment : Fragment() {
             }
         }
         return view
-    }
-    fun characterImage(character: String): BitmapDrawable {
-        if(character.equals("womanstudent")){
-            return ResourcesCompat.getDrawable(resources, R.drawable.ic_student1, null) as BitmapDrawable
-        }else if(character.equals("manstudent")){
-            return ResourcesCompat.getDrawable(resources, R.drawable.ic_student2, null) as BitmapDrawable
-        }else if(character.equals("womanteacher")){
-            return ResourcesCompat.getDrawable(resources, R.drawable.ic_teacher1, null) as BitmapDrawable
-        }else{
-            return ResourcesCompat.getDrawable(resources, R.drawable.ic_teacher2, null) as BitmapDrawable
-        }
     }
 }

@@ -92,6 +92,7 @@ class MyBoardFragment : Fragment() {
             bundle.putString("board_id", board_id)
             bundle.putString("countLike", countLike.text.toString())
             bundle.putString("checkLike", likeImage.isChecked.toString())
+            writeFragment.arguments = bundle
             fragmentTransaction.replace(R.id.main_content, writeFragment).commit();
         }
         view.likeImage.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
@@ -124,7 +125,7 @@ class MyBoardFragment : Fragment() {
                 val childlist = HashMap<ListViewItem, ArrayList<ListViewItem>?>()
                 val adapter = ExListViewAdapter(parent, childlist, view.comment_listview)
                 adapter.setUId(user.uId)
-                adapter.setUId(user.gender+user.job)
+                adapter.setCharacter(user.gender+user.job)
                 adapter.setBoard_title(board_id)
                 var index = 0
                 val citemList = HashMap<Int, ArrayList<ListViewItem>>()
@@ -133,15 +134,15 @@ class MyBoardFragment : Fragment() {
                     val child = ArrayList<ListViewItem>()
                     val commentContent = parentSnapshot.child("comment/").value.toString()
                     val uid = parentSnapshot.child("uid/").value.toString()
-                    val characeter = parentSnapshot.child("character/").value.toString()
-                    val pitem = ListViewItem(commentContent, uid, user.characterImage(characeter))
+                    val character = parentSnapshot.child("character/").value.toString()
+                    val pitem = ListViewItem(commentContent, uid, user.characterImage(character))
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
                         val ccommentContent = childSnapshot.child("comment/").value.toString()
                         println("댓글은 $commentContent, 대댓글은 $ccommentContent")
                         val cuid = childSnapshot.child("uid/").value.toString()
-                        val character = childSnapshot.child("character/").value.toString()
-                        val citem = ListViewItem(ccommentContent, cuid, user.characterImage(character))
+                        val ccharacter = childSnapshot.child("character/").value.toString()
+                        val citem = ListViewItem(ccommentContent, cuid, user.characterImage(ccharacter))
                         child.add(citem)
                     }
                     citemList[index - 1] = child

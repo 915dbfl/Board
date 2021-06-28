@@ -53,13 +53,13 @@ class LoginActivity : AppCompatActivity() {
                         val refUserGender = database.getReference("User/"+user.uId+"/gender")
                         val refUserJob = database.getReference("User/"+user.uId+"/job")
                         refUserGender.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                user.gender = dataSnapshot.getValue().toString()
-                            }
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    user.gender = dataSnapshot.getValue().toString()
+                                }
 
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                // ...
-                            }
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    // ...
+                                }
                         })
                         refUserJob.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
