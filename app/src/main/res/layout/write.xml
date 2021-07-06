@@ -5,98 +5,114 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_margin="20dp"
-        android:layout_gravity="center_horizontal"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/rectangle_blue"
-        >
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_margin="20dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout="@+id/login_image"
-            >
-            <TextView
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="title"
-                android:textColor="@color/colorGray"
-                android:textSize="50px"
-                android:paddingTop="30px"
-                android:layout_marginRight="10px"
-                >
-            </TextView>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:padding="10dp"
-                    android:hint="title"
-                    android:textColor="@color/colorGray"
-                    android:background="@drawable/edit_style"
-                    android:id="@+id/TextInputEditText_title">
-
-                </com.google.android.material.textfield.TextInputEditText>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout="@+id/login_image"
             android:orientation="vertical"
+            android:background="@drawable/rectangle_character_blue"
             >
-            <TextView
-                android:textStyle="bold"
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@+id/login_image"
+                >
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="title"
+                    android:textColor="@color/colorGray"
+                    android:textSize="50px"
+                    android:paddingTop="30px"
+                    android:layout_marginRight="10px"
+                    >
+                </TextView>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:padding="10dp"
+                        android:hint="title"
+                        android:textColor="@color/colorGray"
+                        android:background="@drawable/edit_style"
+                        android:id="@+id/TextInputEditText_title">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@+id/login_image"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="content"
+                    android:textColor="@color/colorGray"
+                    android:textSize="50px"
+                    android:paddingTop="30px"
+                    android:layout_marginRight="10px"
+                    >
+                </TextView>
+                <LinearLayout
+                    android:id="@+id/layout_addPhoto"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:src="@drawable/ic_add_photo"
+                        android:layout_gravity="center"
+                        android:id="@+id/image_content"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp">
+                    </ImageView>
+                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:inputType="textMultiLine"
+                        android:background="@drawable/edit_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:hint="content"
+                        android:textColor="@color/colorGray"
+                        android:scrollHorizontally="false"
+                        android:padding="10dp"
+                        android:id="@+id/TextInputEditText_content">
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <Button
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="16dp"
+                android:id="@+id/Button_write"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="content"
-                android:textColor="@color/colorGray"
-                android:textSize="50px"
-                android:paddingTop="30px"
-                android:layout_marginRight="10px"
-                >
-            </TextView>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_gravity="center"
+                android:text="write"
+                android:background="@drawable/btn_login_white"
+                android:textColor="#ffffff" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="textMultiLine"
-                    android:background="@drawable/edit_style"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:hint="content"
-                    android:textColor="@color/colorGray"
-                    android:scrollHorizontally="false"
-                    android:padding="10dp"
-                    android:id="@+id/TextInputEditText_content">
-
-                </com.google.android.material.textfield.TextInputEditText>
-            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-
-        <Button
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="16dp"
-            android:id="@+id/Button_write"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="write"
-            android:background="@drawable/btn_login_white"
-            android:textColor="#ffffff" />
-
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

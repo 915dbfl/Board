@@ -3,6 +3,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.my_board" >
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <application
         android:usesCleartextTraffic="true"
@@ -23,9 +28,6 @@
         <activity android:name=".Activity.MainActivity"/>
         <activity android:name=".Activity.LoginActivity"/>
         <activity android:name=".Activity.RegisterActivity"/>
-        <activity android:name=".Activity.WriteActivity"/>
-        <activity android:name=".Activity.MyBoardActivity"/>
-        <activity android:name=".Activity.BoardActivity"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -45,7 +47,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

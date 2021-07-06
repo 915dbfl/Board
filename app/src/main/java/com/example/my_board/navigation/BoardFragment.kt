@@ -2,7 +2,9 @@ package com.example.my_board.navigation
 
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,17 +14,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.my_board.*
 import com.example.my_board.Activity.MainActivity
 import com.example.my_board.ListView.ExListViewAdapter
 import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 import kotlinx.android.synthetic.main.board.*
 import kotlinx.android.synthetic.main.board.TextInputEditText_comment
 import kotlinx.android.synthetic.main.board.view.*
+import kotlinx.android.synthetic.main.board.view.Button_done
+import kotlinx.android.synthetic.main.board.view.Button_list
+import kotlinx.android.synthetic.main.board.view.board_content
+import kotlinx.android.synthetic.main.board.view.board_img
+import kotlinx.android.synthetic.main.board.view.board_title
+import kotlinx.android.synthetic.main.board.view.comment_listview
+import kotlinx.android.synthetic.main.board.view.countLike
+import kotlinx.android.synthetic.main.board.view.likeImage
 import kotlinx.android.synthetic.main.myboard.*
+import kotlinx.android.synthetic.main.myboard.view.*
+import java.lang.Exception
 
 
 class BoardFragment : Fragment() {
@@ -33,10 +47,16 @@ class BoardFragment : Fragment() {
         val Ref = database.getReference("Content/")
         val applicationContext = activity?.applicationContext
         val user : User = applicationContext as User
-        val board_id = arguments!!.getString("board_id")
-        val title = arguments!!.getString("title")
+        val board_id = arguments!!.getString("board_id")!!
+        val title = arguments!!.getString("title")!!
         val boardUid = arguments!!.getString("boardUid")
         val content = arguments!!.getString("content")
+        val image = arguments!!.getString("image")
+        if(image != null){
+            getFireBaseProfileImage(title, boardUid!!)
+        }else{
+            view.board_img.visibility = View.INVISIBLE
+        }
         view.countLike.text = arguments!!.getString("countLike")
         view.likeImage.tag = "1"
         if (view.likeImage.tag.toString().toInt() == 1) {
@@ -120,13 +140,13 @@ class BoardFragment : Fragment() {
                     val uid = parentSnapshot.child("uid/").value.toString()
                     val character = parentSnapshot.child("character/").value.toString()
                     Log.d("===========================================", commentContent + uid + character)
-                    val pitem = ListViewItem(commentContent, uid, user.characterImage(character))
+                    val pitem = ListViewItem(commentContent, uid, user.characterImage(character), false)
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
                         val ccommentContent = childSnapshot.child("comment/").value.toString()
                         val cuid = childSnapshot.child("uid/").value.toString()
                         val ccharacter = childSnapshot.child("character/").value.toString()
-                        val citem = ListViewItem(ccommentContent, cuid, user.characterImage(ccharacter))
+                        val citem = ListViewItem(ccommentContent, cuid, user.characterImage(ccharacter), false)
                         child.add(citem)
                     }
                     citemList[index - 1] = child
@@ -151,4 +171,22 @@ class BoardFragment : Fragment() {
         })
         return view
     }
+    fun getFireBaseProfileImage(title: String, user: String){
+        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"+user+"/"+title+".jpg")
+        if(!file!!.isDirectory){
+            file.mkdir()
+        }
+        downLoadImg(title, user)
+    }
+
+    fun downLoadImg(title: String, user: String){
+        val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
+        val storageRef = storage.getReference("profile_img/" + user + "/" + title + ".jpg")
+        storageRef.downloadUrl
+                .addOnSuccessListener(){
+                    Glide.with(context!!).load(it).into(view!!.board_img)
+                }.addOnFailureListener {
+                }
+    }
+
 }

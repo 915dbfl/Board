@@ -16,10 +16,7 @@ import com.example.my_board.*
 import com.example.my_board.ListView.ListViewAdapter
 import com.example.my_board.ListView.ListViewItem
 import com.example.my_board.R
-import com.example.my_board.navigation.BoardFragment
-import com.example.my_board.navigation.MainFragment
-import com.example.my_board.navigation.SearchFragment
-import com.example.my_board.navigation.WriteFragment
+import com.example.my_board.navigation.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -57,8 +54,8 @@ class MainActivity : AppCompatActivity(){
                         supportFragmentManager.beginTransaction().replace(R.id.main_content,writeFragment).commit()
                     }
                     R.id.action_account -> {
-                        var writeFragment = WriteFragment()
-                        supportFragmentManager.beginTransaction().replace(R.id.main_content,writeFragment).commit()
+                        var accountFragment = AccountFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_content,accountFragment).commit()
                     }
                     R.id.action_favorite_alarm -> {
                         var writeFragment = WriteFragment()

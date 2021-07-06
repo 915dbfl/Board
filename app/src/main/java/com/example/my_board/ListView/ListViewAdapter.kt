@@ -56,8 +56,8 @@ class ListViewAdapter : BaseAdapter(), Filterable {
         return filteredItemList[position]
     }
 
-    fun addItem(title: String?, content: String?, uid: String?, countLike: String?, icon: BitmapDrawable) {
-        val item = ListViewItem(title!!, uid!!, icon)
+    fun addItem(title: String?, content: String?, uid: String?, countLike: String?, icon: BitmapDrawable, image: Boolean) {
+        val item = ListViewItem(title!!, uid!!, icon, image)
         item.board_content = content
         if(countLike != null){
             item.countLike = countLike!!

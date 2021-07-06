@@ -3,7 +3,7 @@ package com.example.my_board.ListView
 import android.app.Application
 import android.graphics.drawable.BitmapDrawable
 
-class ListViewItem(var board_title: String, var board_uid: String, var character : BitmapDrawable) : Application() {
+class ListViewItem(var board_title: String, var board_uid: String, var character : BitmapDrawable, var image : Boolean) : Application() {
     var countLike = ""
         get() = field
         set(countLike) {

@@ -5,7 +5,7 @@
     android:orientation="vertical">
     <LinearLayout
         android:padding="10dp"
-        android:background="@drawable/rectangle_blue"
+        android:background="@drawable/rectangle_character_blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -42,10 +42,16 @@
             android:orientation="vertical"
             android:layout_marginTop="5dp"
             >
+            <ImageView
+                android:src="@drawable/ic_add_photo"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:id="@+id/board_img">
+            </ImageView>
             <TextView
                 android:textColor="@color/colorGray"
                 android:id="@+id/board_content"
-                android:layout_marginTop="20px"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="content"
@@ -95,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/rectangle_blue"
+        android:background="@drawable/rectangle_character_blue"
         >
         <LinearLayout
             android:layout_gravity="center_horizontal"

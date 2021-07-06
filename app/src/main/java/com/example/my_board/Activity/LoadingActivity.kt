@@ -29,25 +29,17 @@ internal class LoadingActivity : Activity() {
                 if(cuser.email!! == null){
                     user.setUId(cuser.displayName.toString())
                 }else{
-                    user.setUId(cuser.email!!)
+                    user.setUId(cuser!!.email!!)
                     val database = FirebaseDatabase.getInstance()
-                    val refUserGender = database.getReference("User/"+user.uId+"/gender")
-                    val refUserJob = database.getReference("User/"+user.uId+"/job")
-                    refUserGender.addListenerForSingleValueEvent(object : ValueEventListener {
+                    val refUser = database.getReference("User/"+user.uId)
+                    refUser.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            user.gender = dataSnapshot.getValue().toString()
+                            user.gender = dataSnapshot.child("/gender").getValue().toString()
+                            user.job = dataSnapshot.child("/job").getValue().toString()
                         }
 
                         override fun onCancelled(databaseError: DatabaseError) {
                             user.gender = "man"
-                        }
-                    })
-                    refUserJob.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            user.job = dataSnapshot.getValue().toString()
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
                             user.job = "teacher"
                         }
                     })

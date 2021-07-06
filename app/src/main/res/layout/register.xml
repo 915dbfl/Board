@@ -35,7 +35,7 @@
     </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:layout_margin="20dp"
-        android:background="@drawable/rectangle_blue"
+        android:background="@drawable/rectangle_character_blue"
         android:layout_below="@id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

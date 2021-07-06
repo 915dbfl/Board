@@ -1,8 +1,11 @@
 package com.example.my_board.navigation
 
-import android.app.Application
-import android.content.Context
+import android.Manifest.permission.CAMERA
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -10,6 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.my_board.Activity.MainActivity
 import com.example.my_board.R
@@ -18,11 +23,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.write.*
 import kotlinx.android.synthetic.main.write.view.*
 import java.util.HashMap
 
+
 class WriteFragment : Fragment() {
+    var uri: Uri? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = LayoutInflater.from(activity).inflate(R.layout.write, container, false)
         val applicationContext = activity?.applicationContext
@@ -44,7 +52,6 @@ class WriteFragment : Fragment() {
                     val database = FirebaseDatabase.getInstance()
                     val contentRef = database.getReference("Content/")
                     if (btitle == title) {
-                        val myRef = database.getReference("User/" + user.uId + "/likeList")
                         contentRef.child(user.uId + title).updateChildren(hashMap)
                     } else {
                         contentRef.child(user.uId + title).setValue(hashMap)
@@ -97,8 +104,18 @@ class WriteFragment : Fragment() {
                 if (title.isEmpty() || content.isEmpty()) {
                     Toast.makeText(context, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
-                    //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
                     val hashMap = HashMap<String, Any>()
+                    if(uri != null){
+                        val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
+                        val storageRef = storage.getReference()
+                        val filename = title + ".jpg"
+                        val riverRef = storageRef.child("profile_img/" + user.uId + "/" + filename)
+                        riverRef.putFile(uri!!)
+                        hashMap["image"] = true
+                    }else{
+                        hashMap["image"] = false
+                    }
+                    //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
                     hashMap["uid"] = user.uId!!
                     hashMap["title"] = title
                     hashMap["content"] = content
@@ -116,6 +133,50 @@ class WriteFragment : Fragment() {
             }
         }
         fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
+        view.layout_addPhoto.setOnClickListener(){
+            if(checkPermission()){
+                openGalleryForImage()
+            }else{
+                requestPermission()
+            }
+        }
+
         return view
+    }
+    val REQUEST_IMAGE_CAPTURE = 1
+    fun requestPermission(){
+        ActivityCompat.requestPermissions(context as Activity, arrayOf(READ_EXTERNAL_STORAGE, CAMERA),REQUEST_IMAGE_CAPTURE)
+    }
+    fun checkPermission(): Boolean{
+        return (ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.CAMERA)==
+                PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.READ_EXTERNAL_STORAGE)==
+                PackageManager.PERMISSION_GRANTED)
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode ==1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            Log.d("TAG", "Permission: " + permissions[0] + "was " + grantResults[0] + "허가 받음.")
+        }else{
+            Log.d("TAG", "허가 못받음.")
+        }
+    }
+    fun openGalleryForImage(){
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type="image/*"
+        startActivityForResult(intent, 2)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("--------------", data?.data.toString())
+        uri = data?.data
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            2->{
+                if(requestCode == Activity.RESULT_OK || requestCode == 2){
+                    Log.d("--------------", data?.data.toString())
+                    view!!.image_content.setImageURI(data?.data)
+                }
+            }
+        }
     }
 }

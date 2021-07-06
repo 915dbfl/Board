@@ -38,8 +38,9 @@ class MainFragment : Fragment() {
                     val content = Snapshot.child("content").value.toString()
                     val uid = Snapshot.child("uid").value.toString()
                     val character = Snapshot.child("character").value.toString()
+                    val image = Snapshot.child("image").value
                     val countLike = Integer.toString(Snapshot.child("like").childrenCount.toInt())
-                    adapter.addItem(title, content, uid, countLike, user.characterImage(character))
+                    adapter.addItem(title, content, uid, countLike, user.characterImage(character), image as Boolean)
                 }
                 adapter.notifyDataSetChanged()
                 view.board_listview.adapter = adapter
@@ -63,6 +64,7 @@ class MainFragment : Fragment() {
                 bundle.putString("content", contentStr)
                 bundle.putString("board_id", item.board_uid + titleStr)
                 bundle.putString("countLike", item.countLike)
+                bundle.putBoolean("image", item.image)
                 myboardFragment.arguments = bundle
                 fragmentTransaction.replace(R.id.main_content, myboardFragment).commit();
             } else {
@@ -73,6 +75,7 @@ class MainFragment : Fragment() {
                 bundle.putString("content", contentStr)
                 bundle.putString("board_id", item.board_uid + titleStr)
                 bundle.putString("countLike", item.countLike)
+                bundle.putBoolean("image", item.image)
                 boardFragment.arguments = bundle
                 fragmentTransaction.replace(R.id.main_content, boardFragment).commit();
             }

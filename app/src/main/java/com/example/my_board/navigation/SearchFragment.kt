@@ -55,8 +55,9 @@ class SearchFragment : Fragment() {
                         val content = Snapshot.child("content").value.toString()
                         val uid = Snapshot.child("uid").value.toString()
                         val character = Snapshot.child("character").value.toString()
+                        val image = Snapshot.child("image").value as Boolean
                         val countLike = Integer.toString(Snapshot.child("like").childrenCount.toInt())
-                        adapter.addItem(title, content, uid, countLike, user.characterImage(character))
+                        adapter.addItem(title, content, uid, countLike, user.characterImage(character), image)
                     }
                     adapter.notifyDataSetChanged()
                     view.board_listview.adapter = adapter
