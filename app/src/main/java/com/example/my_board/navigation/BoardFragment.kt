@@ -139,7 +139,6 @@ class BoardFragment : Fragment() {
                     val commentContent = parentSnapshot.child("comment/").value.toString()
                     val uid = parentSnapshot.child("uid/").value.toString()
                     val character = parentSnapshot.child("character/").value.toString()
-                    Log.d("===========================================", commentContent + uid + character)
                     val pitem = ListViewItem(commentContent, uid, user.characterImage(character), false)
                     parent.add(pitem)
                     for (childSnapshot in parentSnapshot.child("/ccomment").children) {
@@ -172,7 +171,7 @@ class BoardFragment : Fragment() {
         return view
     }
     fun getFireBaseProfileImage(title: String, user: String){
-        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"+user+"/"+title+".jpg")
+        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/board_img")
         if(!file!!.isDirectory){
             file.mkdir()
         }
@@ -181,7 +180,7 @@ class BoardFragment : Fragment() {
 
     fun downLoadImg(title: String, user: String){
         val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
-        val storageRef = storage.getReference("profile_img/" + user + "/" + title + ".jpg")
+        val storageRef = storage.getReference("board_img/" + user + "/" + title + ".jpg")
         storageRef.downloadUrl
                 .addOnSuccessListener(){
                     Glide.with(context!!).load(it).into(view!!.board_img)

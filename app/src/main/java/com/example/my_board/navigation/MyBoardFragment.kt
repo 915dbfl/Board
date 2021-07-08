@@ -28,6 +28,7 @@ import com.example.my_board.R
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.listview_mcitem.*
 import java.util.*
 import kotlinx.android.synthetic.main.myboard.*
 import kotlinx.android.synthetic.main.myboard.view.*
@@ -79,6 +80,13 @@ class MyBoardFragment : Fragment() {
             val database = FirebaseDatabase.getInstance()
             val removeContent = database.getReference("Content/" + user.uId + title + '/')
             removeContent.removeValue()
+            val storage = FirebaseStorage.getInstance()
+            val delstorageRef = storage.getReference("board_img/" + user.uId + "/" + title + ".jpg")
+            delstorageRef.delete().addOnSuccessListener {
+                Toast.makeText(context, "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(context, "게시글 삭제를 실패하였습니다.", Toast.LENGTH_SHORT).show()
+            }
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
         }
@@ -193,7 +201,7 @@ class MyBoardFragment : Fragment() {
         return view
     }
     fun getFireBaseProfileImage(title: String, user: String){
-        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"+user+"/"+title+".jpg")
+        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/board_img")
         if(!file!!.isDirectory){
             file.mkdir()
         }
@@ -202,7 +210,7 @@ class MyBoardFragment : Fragment() {
 
     fun downLoadImg(title: String, user: String){
         val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
-        val storageRef = storage.getReference("profile_img/" + user + "/" + title + ".jpg")
+        val storageRef = storage.getReference("board_img/" + user + "/" + title + ".jpg")
         storageRef.downloadUrl
                 .addOnSuccessListener(){
                     Glide.with(context!!).load(it).into(view!!.board_img)

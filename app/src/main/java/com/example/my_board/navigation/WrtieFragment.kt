@@ -120,7 +120,7 @@ class WriteFragment : Fragment() {
                     if(imgUri != null){
                         val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
                         val filename = title + ".jpg"
-                        val storageRef = storage.getReference("profile_img/" + user.uId + "/" + filename)
+                        val storageRef = storage.getReference("board_img/" + user.uId + "/" + filename)
                         storageRef.putFile(imgUri!!)
                         hashMap["image"] = true
                     }else{
@@ -190,7 +190,7 @@ class WriteFragment : Fragment() {
     }
 
     fun getFireBaseProfileImage(title: String, user: String, restore: Boolean){
-        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img")
+        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/board_img")
         if(!file!!.isDirectory){
             file.mkdir()
         }
@@ -199,7 +199,7 @@ class WriteFragment : Fragment() {
 
     fun downLoadImg(title: String, user: String, restore: Boolean){
         val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
-        val storageRef = storage.getReference("profile_img/" + user + "/" + title + ".jpg")
+        val storageRef = storage.getReference("board_img/" + user + "/" + title + ".jpg")
         storageRef.downloadUrl
                 .addOnSuccessListener(){
                     check = it
@@ -209,16 +209,4 @@ class WriteFragment : Fragment() {
                 }.addOnFailureListener {
                 }
     }
-
-//    fun deleteImage(btitle: String, user: String){
-//        val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
-//        val deleteRef = storage.getReference("profile_img/" + user + "/" + btitle + ".jpg")
-//        deleteRef.downloadUrl.addOnSuccessListener(){
-//            Log.d("*****************", it.toString())
-//            uri = it
-//        }.addOnFailureListener { }
-//        deleteRef.delete().addOnSuccessListener {
-//            Log.d("*****************", "이미지 삭제 완료!!!!")
-//        }.addOnFailureListener { }
-//    }
 }
