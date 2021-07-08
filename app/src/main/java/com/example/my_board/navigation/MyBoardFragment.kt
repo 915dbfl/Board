@@ -45,10 +45,10 @@ class MyBoardFragment : Fragment() {
         val board_id = arguments?.getString("board_id")!!
         val title = arguments?.getString("title")!!
         val image = arguments?.getBoolean("image")
-        if(image != null){
+        if(image == true){
             getFireBaseProfileImage(title, user.uId!!)
         }else{
-            view.board_img.visibility = View.INVISIBLE
+            view.board_img.visibility = View.GONE
         }
         view.countLike.text = arguments?.getString("countLike")
         view.likeImage.tag = "1"
@@ -109,6 +109,10 @@ class MyBoardFragment : Fragment() {
             bundle.putString("board_id", board_id)
             bundle.putString("countLike", countLike.text.toString())
             bundle.putString("checkLike", likeImage.isChecked.toString())
+            bundle.putString("character", user.gender+user.job)
+            if(image != null){
+                bundle.putBoolean("image", image)
+            }
             writeFragment.arguments = bundle
             fragmentTransaction.replace(R.id.main_content, writeFragment).commit();
         }

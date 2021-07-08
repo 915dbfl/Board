@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.my_board.Activity.MainActivity
 import com.example.my_board.R
 import com.example.my_board.User
@@ -24,13 +26,16 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.myboard.view.*
 import kotlinx.android.synthetic.main.write.*
 import kotlinx.android.synthetic.main.write.view.*
+import java.io.FileInputStream
 import java.util.HashMap
 
 
 class WriteFragment : Fragment() {
-    var uri: Uri? = null
+    var imgUri: Uri? = null
+    var check: Uri? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = LayoutInflater.from(activity).inflate(R.layout.write, container, false)
         val applicationContext = activity?.applicationContext
@@ -38,6 +43,10 @@ class WriteFragment : Fragment() {
         if (arguments?.getString("title") != null && arguments?.getString("content") != null) {
             val btitle = arguments?.getString("title").toString()
             val bcontent = arguments?.getString("content").toString()
+            if(arguments?.getBoolean("image") != null){
+                getFireBaseProfileImage(btitle, user.uId!!, false)
+                view.TextInputEditText_title.isEnabled = false
+            }
             view.TextInputEditText_content.setText(bcontent)
             view.TextInputEditText_title.setText(btitle)
             view.Button_write.setOnClickListener {
@@ -52,8 +61,11 @@ class WriteFragment : Fragment() {
                     val database = FirebaseDatabase.getInstance()
                     val contentRef = database.getReference("Content/")
                     if (btitle == title) {
+                        hashMap["image"] = arguments?.getBoolean("image") != null
                         contentRef.child(user.uId + title).updateChildren(hashMap)
                     } else {
+                        hashMap["image"] = false
+                        hashMap["character"] = arguments!!.getString("character").toString()
                         contentRef.child(user.uId + title).setValue(hashMap)
                     }
                     contentRef.addValueEventListener(object : ValueEventListener {
@@ -105,12 +117,11 @@ class WriteFragment : Fragment() {
                     Toast.makeText(context, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
                     val hashMap = HashMap<String, Any>()
-                    if(uri != null){
+                    if(imgUri != null){
                         val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
-                        val storageRef = storage.getReference()
                         val filename = title + ".jpg"
-                        val riverRef = storageRef.child("profile_img/" + user.uId + "/" + filename)
-                        riverRef.putFile(uri!!)
+                        val storageRef = storage.getReference("profile_img/" + user.uId + "/" + filename)
+                        storageRef.putFile(imgUri!!)
                         hashMap["image"] = true
                     }else{
                         hashMap["image"] = false
@@ -167,16 +178,47 @@ class WriteFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("--------------", data?.data.toString())
-        uri = data?.data
+        imgUri = data?.data!!
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
             2->{
                 if(requestCode == Activity.RESULT_OK || requestCode == 2){
-                    Log.d("--------------", data?.data.toString())
                     view!!.image_content.setImageURI(data?.data)
                 }
             }
         }
     }
+
+    fun getFireBaseProfileImage(title: String, user: String, restore: Boolean){
+        val file = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img")
+        if(!file!!.isDirectory){
+            file.mkdir()
+        }
+        downLoadImg(title, user, restore)
+    }
+
+    fun downLoadImg(title: String, user: String, restore: Boolean){
+        val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
+        val storageRef = storage.getReference("profile_img/" + user + "/" + title + ".jpg")
+        storageRef.downloadUrl
+                .addOnSuccessListener(){
+                    check = it
+                    if(restore != true){
+                        Glide.with(context!!).load(it).into(view!!.image_content)
+                    }
+                }.addOnFailureListener {
+                }
+    }
+
+//    fun deleteImage(btitle: String, user: String){
+//        val storage = FirebaseStorage.getInstance("gs://yuri-yotubu.appspot.com")
+//        val deleteRef = storage.getReference("profile_img/" + user + "/" + btitle + ".jpg")
+//        deleteRef.downloadUrl.addOnSuccessListener(){
+//            Log.d("*****************", it.toString())
+//            uri = it
+//        }.addOnFailureListener { }
+//        deleteRef.delete().addOnSuccessListener {
+//            Log.d("*****************", "이미지 삭제 완료!!!!")
+//        }.addOnFailureListener { }
+//    }
 }

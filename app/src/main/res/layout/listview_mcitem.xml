@@ -26,7 +26,7 @@
                 android:id="@+id/board_img"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_programmer"
+                android:src="@drawable/ic_student2"
                 android:layout_weight="1">
             </ImageView>
             <LinearLayout
